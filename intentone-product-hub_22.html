@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IntentOne — Product Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fffcf7;--panel:#1a1310;--ink:#1a1310;--ink-deep:#241a15;
+    --green:#00d058;--green-deep:#0a7d3c;--brown:#785940;--brown-light:#997c62;
+    --body-muted:#6f5744;--sand:#ecddc8;--coral:#f6594f;--rule:#e7dccb;--rule-soft:#efe6d7;
+    --red:#ff2217;--void:#0e0b09;--blue:#2c9bc7;--blue-deep:#1f7196;--amber:#e0a032;--amber-deep:#9a6b12;
+    --p1:#4F46E5;--p2:#26b5ce;--p3:#DC2626;--p4:#D97706;--p5:#059669;--p6:#7d5d43;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--void);font-family:'Barlow Semi Condensed',system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;}
+  .page{max-width:1300px;margin:0 auto;background:var(--cream);padding:56px 60px 84px;min-height:100vh;}
+
+  .overline{font-size:13px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--brown);margin:0 0 14px;}
+  h1{font-size:56px;line-height:0.96;font-weight:700;letter-spacing:-1.6px;margin:0 0 14px;color:var(--ink);max-width:920px;}
+  h1 .hl{color:var(--green);}
+  .lede{font-size:20px;line-height:1.32;font-weight:400;letter-spacing:-0.3px;color:var(--body-muted);max-width:780px;margin:0;}
+  .lede b{color:var(--ink-deep);font-weight:600;}
+  .lede .g{color:var(--green-deep);font-weight:600;}
+
+  .divider{height:2px;background:var(--ink);border:0;margin:30px 0 8px;}
+
+  .flowlabel{display:flex;justify-content:space-between;align-items:baseline;margin:22px 2px 6px;gap:20px;}
+  .flowlabel .t{font-size:12px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--brown);}
+  .flowlabel .hint{font-size:13px;font-style:italic;color:var(--brown-light);}
+
+  .pipeline{position:relative;display:flex;gap:6px;padding:26px 0 6px;}
+  .pipeline::before{content:"";position:absolute;top:66px;left:9%;right:9%;height:2px;background:repeating-linear-gradient(90deg,var(--rule) 0 14px,transparent 14px 22px);z-index:0;}
+  .node{position:relative;z-index:1;flex:1 1 0;min-width:0;background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 4px;font-family:inherit;}
+  .ring{position:relative;width:80px;height:80px;border-radius:50%;background:var(--cream);padding:2px;transition:transform .18s ease;}
+  .node:hover .ring{transform:translateY(-3px);}
+  .ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .ring .track{fill:none;stroke:var(--rule);stroke-width:5;}
+  .ring .prog{fill:none;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .6s ease;}
+  .ring .ctr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring .pct{font-size:23px;font-weight:700;letter-spacing:-1px;color:var(--ink-deep);line-height:1;}
+  .ring .pct span{font-size:12px;font-weight:600;}
+  .ring .glyph{position:absolute;top:-7px;right:-7px;width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.18);}
+  .ring .glyph svg{width:14px;height:14px;transform:none;stroke:#fff;fill:none;stroke-width:2;}
+  .verb{font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--brown-light);margin:12px 0 3px;}
+  .nname{font-size:15.5px;font-weight:700;letter-spacing:-0.3px;color:var(--ink);line-height:1.08;}
+  .nstatus{font-size:12.5px;line-height:1.32;color:var(--body-muted);margin:6px 0 0;max-width:172px;}
+  .node.active .nname{color:var(--green-deep);}
+  .node.active .ring{transform:translateY(-3px);}
+  .node .caret{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:8px solid var(--ink-deep);margin:12px auto 0;opacity:0;transition:opacity .15s ease;}
+  .node.active .caret{opacity:1;}
+
+  .detail{display:none;margin-top:8px;background:#fdf8ef;border:1px solid var(--rule);border-radius:10px;padding:30px 34px 34px;}
+  .detail.open{display:block;}
+  .dhead{display:flex;align-items:flex-start;gap:16px;margin:0 0 24px;flex-wrap:wrap;}
+  .dtile{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .dtile svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:1.9;}
+  .dtitle{flex:1;min-width:240px;}
+  .dtitle h2{font-size:29px;font-weight:700;letter-spacing:-0.7px;color:var(--ink);margin:0;line-height:1.02;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .dtitle h2 a{color:var(--ink);}
+  .dtitle h2 a:hover{color:var(--green-deep);}
+  .plink{font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--brown-light);border:1px solid var(--rule);border-radius:5px;padding:2px 7px;white-space:nowrap;}
+  .plink:hover{border-color:var(--green);color:var(--green-deep);}
+  .dstatus{font-size:15px;color:var(--body-muted);margin:8px 0 0;max-width:760px;line-height:1.4;}
+  .dpct{flex:0 0 auto;text-align:right;}
+  .dpct b{font-size:34px;font-weight:700;letter-spacing:-1.4px;color:var(--ink-deep);line-height:1;}
+  .dpct b span{font-size:16px;}
+  .dpct small{display:block;font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--brown-light);margin-top:4px;}
+
+  .infra-note{font-size:13px;line-height:1.5;color:var(--body-muted);background:#fdf6ea;border:1px dashed #e2d3ba;border-radius:7px;padding:11px 13px;margin:0 0 22px;}
+
+  .board{display:grid;grid-template-columns:1fr 1fr 1fr 46px 1fr;gap:20px;align-items:stretch;}
+  .col{display:flex;flex-direction:column;gap:8px;min-width:0;}
+  .colhd{font-size:11px;font-weight:700;letter-spacing:0.9px;text-transform:uppercase;display:flex;align-items:center;gap:7px;margin-bottom:4px;line-height:1.2;}
+  .colhd .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;}
+  .colhd .ct{font-size:10px;font-weight:600;color:var(--brown-light);letter-spacing:0.4px;}
+  .col.ship .colhd{color:var(--green-deep);} .col.ship .dot{background:var(--green);}
+  .col.now .colhd{color:var(--blue-deep);} .col.now .dot{background:var(--blue);}
+  .col.next .colhd{color:var(--amber-deep);} .col.next .dot{background:var(--amber);}
+  .col.later .colhd{color:var(--brown);} .col.later .dot{background:var(--brown-light);}
+
+  .card{display:block;background:#fffdf9;border:1px solid var(--rule-soft);border-left:3px solid var(--rule);border-radius:7px;padding:10px 12px;text-decoration:none;transition:border-color .15s,background .15s;}
+  .card:hover{background:#fbf3e6;}
+  .card.ship{border-left-color:var(--green);}
+  .card.now{border-left-color:var(--blue);}
+  .card.next{border-left-color:var(--amber);}
+  .card.later{border-left-color:var(--brown-light);background:#fdfaf4;}
+  .card .ct{font-size:13.5px;font-weight:600;color:var(--ink-deep);line-height:1.26;}
+  .card.later .ct{font-weight:500;color:var(--body-muted);}
+  .card .cs{font-size:11px;line-height:1.36;color:var(--brown-light);margin-top:5px;font-style:italic;}
+  .card .cs b{font-style:normal;font-weight:600;color:var(--brown);letter-spacing:0.3px;text-transform:uppercase;font-size:9px;display:block;margin-bottom:1px;}
+  .card .cm{font-size:11px;color:var(--brown-light);margin-top:6px;letter-spacing:0.2px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .card .kd{font-size:9px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;padding:1px 5px;border-radius:3px;}
+  .kd.hi{background:rgba(255,34,23,.1);color:#c23c33;}
+  .card .date{font-variant-numeric:tabular-nums;}
+  .col-empty{font-size:12.5px;color:var(--brown-light);font-style:italic;padding:4px 2px;}
+
+  .clinks{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+  .clinks a{font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;border:1px solid var(--rule);border-radius:5px;padding:2px 8px;color:var(--brown-light);transition:border-color .15s,color .15s;}
+  .clinks a:hover{border-color:var(--green);color:var(--green-deep);}
+  .clinks a.proto{color:var(--green-deep);border-color:var(--green);}
+
+  .mstone{position:relative;display:flex;align-items:center;justify-content:center;}
+  .mstone::before{content:"";position:absolute;top:36px;bottom:6px;left:50%;transform:translateX(-50%);width:2px;background:repeating-linear-gradient(var(--green) 0 6px,transparent 6px 12px);}
+  .mstone .flagi{position:absolute;top:0;left:50%;transform:translateX(-50%);width:28px;height:28px;border-radius:8px;background:var(--green);display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 1px 4px rgba(0,208,88,.4);}
+  .mstone .flagi svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;}
+  .mstone .lbl{writing-mode:vertical-rl;transform:rotate(180deg);font-size:10.5px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;color:var(--green-deep);background:#fdf8ef;padding:12px 3px;z-index:1;}
+
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--rule);font-size:12px;font-weight:500;letter-spacing:0.4px;color:var(--brown-light);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+  footer .note{text-transform:none;letter-spacing:0.2px;font-style:italic;max-width:680px;}
+  a{color:var(--green-deep);text-decoration:none;}
+
+  @media (max-width:980px){
+    .board{grid-template-columns:1fr;gap:16px;}
+    .mstone{padding:8px 0;min-height:44px;}
+    .mstone::before{top:50%;bottom:auto;left:0;right:0;width:auto;height:2px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--green) 0 6px,transparent 6px 12px);}
+    .mstone .flagi{position:relative;left:auto;transform:none;}
+    .mstone .lbl{writing-mode:horizontal-tb;transform:none;padding:4px 10px;margin-left:8px;}
+  }
+  @media (max-width:900px){
+    .page{padding:36px 22px 56px;}
+    h1{font-size:40px;}
+    .pipeline{overflow-x:auto;gap:14px;padding-bottom:14px;}
+    .pipeline::before{display:none;}
+    .node{flex:0 0 150px;}
+    .nstatus{max-width:150px;}
+  }
+
+  /* ---- hub tabs + deliver view ---- */
+  .tabs{display:flex;gap:10px;margin:24px 0 0;}
+  .tab{font-family:inherit;cursor:pointer;background:none;border:1px solid var(--rule);border-radius:7px;padding:8px 18px;font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--brown-light);transition:all .15s;}
+  .tab.active{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+  .tab:hover:not(.active){border-color:var(--green);color:var(--green-deep);}
+  .view{display:none;}
+  .view.on{display:block;}
+  .dv-lede{font-size:15px;line-height:1.5;color:var(--body-muted);max-width:840px;margin:16px 0 6px;}
+  .dv-lede b{color:var(--ink-deep);font-weight:600;}
+  .skus{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:20px 0 4px;}
+  .sku{border-top:2px solid var(--ink);padding-top:12px;}
+  .sku h4{margin:0;font-size:15px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;color:var(--ink-deep);}
+  .sku .who{font-size:12px;color:var(--brown-light);margin-top:5px;line-height:1.4;font-style:italic;}
+  .phase{margin-top:30px;}
+  .phase-h{font-size:12px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--brown);display:flex;align-items:baseline;gap:10px;}
+  .phase-h small{font-size:11px;font-weight:500;letter-spacing:0.4px;text-transform:none;color:var(--brown-light);font-style:italic;}
+  .stage{background:#fdf8ef;border:1px solid var(--rule);border-radius:10px;padding:18px 20px;margin-top:10px;}
+  .stage h5{margin:0 0 4px;font-size:16px;font-weight:700;letter-spacing:-0.2px;color:var(--ink-deep);}
+  .stage p{margin:6px 0;font-size:13px;line-height:1.5;color:var(--body-muted);}
+  .stage p b{color:var(--ink-deep);font-weight:600;}
+  .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:10px;}
+  .g3 .cell{background:#fffdf9;border:1px solid var(--rule-soft);border-radius:7px;padding:13px 14px;}
+  .cell h6{margin:0 0 7px;font-size:11px;font-weight:700;letter-spacing:0.9px;text-transform:uppercase;color:var(--brown);}
+  .cell p{margin:5px 0;font-size:12.5px;line-height:1.45;color:var(--body-muted);}
+  .cell p b{color:var(--ink-deep);font-weight:600;}
+  .chips2{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;}
+  .chip{font-size:9.5px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;padding:2px 8px;border-radius:4px;border:1px solid;line-height:1.6;}
+  .chip.manual{color:var(--amber-deep);border-color:var(--amber);background:rgba(224,160,50,.08);}
+  .chip.auto{color:var(--green-deep);border-color:var(--green);background:rgba(0,208,88,.07);cursor:pointer;}
+  .chip.auto:hover{background:rgba(0,208,88,.16);}
+  .chip.action{color:#c23c33;border-color:rgba(255,34,23,.35);background:rgba(255,34,23,.05);}
+  @media(max-width:980px){.skus,.g3{grid-template-columns:1fr;}}
+
+  /* ---- landing + pillar-aligned deliver ---- */
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:26px;}
+  .mode{font-family:inherit;text-align:left;cursor:pointer;background:#fdf8ef;border:1px solid var(--rule);border-radius:12px;padding:28px 30px 24px;transition:transform .15s,border-color .15s,box-shadow .15s;}
+  .mode:hover{transform:translateY(-3px);border-color:var(--green);box-shadow:0 6px 18px rgba(36,26,21,.07);}
+  .mode-kicker{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--brown);}
+  .mode h3{font-size:42px;font-weight:700;letter-spacing:-1.5px;color:var(--ink);margin:10px 0 8px;line-height:1;}
+  .mode p{font-size:14px;line-height:1.5;color:var(--body-muted);margin:0 0 16px;max-width:52ch;}
+  .mode-meta{display:flex;gap:7px;align-items:center;margin-bottom:18px;flex-wrap:wrap;}
+  .mdot{width:13px;height:13px;border-radius:50%;display:inline-block;}
+  .mode-go{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green-deep);}
+  .phase-h{align-items:center;}
+  .ptile{width:26px;height:26px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;margin-right:2px;}
+  .ptile svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;}
+  .p-cf .stage{border-left:3px solid #4F46E5;}
+  .p-di .stage{border-left:3px solid #26b5ce;}
+  .p-di .g3 .cell{border-left:3px solid #26b5ce;}
+  .p-act .stage{border-left:3px solid #059669;}
+  @media(max-width:980px){.modes{grid-template-columns:1fr;}}
+
+  /* ---- deliver matrix ---- */
+  .dtable{display:grid;grid-template-columns:170px 1fr 1fr 1fr;gap:12px;margin-top:22px;align-items:stretch;}
+  .dt-sku{border-top:2px solid var(--ink);padding-top:10px;}
+  .dt-sku h4{margin:0;font-size:14px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;color:var(--ink-deep);}
+  .dt-sku .who{font-size:11.5px;color:var(--brown-light);margin-top:4px;line-height:1.4;font-style:italic;}
+  .dt-row{display:flex;flex-direction:column;gap:7px;padding-top:6px;}
+  .dt-row .ptile{width:30px;height:30px;margin:0;}
+  .dt-row .ptile svg{width:17px;height:17px;}
+  .dt-row .rn{font-size:13.5px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;color:var(--ink-deep);line-height:1.15;}
+  .dt-row .rs{font-size:11px;color:var(--brown-light);font-style:italic;line-height:1.35;}
+  .dt-cell{background:#fdf8ef;border:1px solid var(--rule);border-left:3px solid var(--rule);border-radius:8px;padding:14px 16px;}
+  .dt-cell p{margin:4px 0;font-size:12.5px;line-height:1.5;color:var(--body-muted);}
+  .dt-cell p b{color:var(--ink-deep);font-weight:600;}
+  .dt-qa{background:#fffdf9;}
+  .span3{grid-column:2/5;}
+  @media(max-width:980px){.dtable{grid-template-columns:1fr;}.span3{grid-column:auto;}.dt-corner,.dt-empty{display:none;}}
+
+  /* ---- SKU matrix ---- */
+  .m2{display:grid;grid-template-columns:170px 1fr 1fr 1fr;column-gap:18px;row-gap:0;margin-top:22px;}
+  .m2 .mlab{display:flex;flex-direction:column;gap:7px;padding:18px 8px 8px 0;}
+  .m2 .mlab .rn{font-size:13px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-deep);line-height:1.2;}
+  .m2 .mlab .rs{font-size:11px;color:var(--brown-light);font-style:italic;line-height:1.3;}
+  .mc{background:#fffdf9;border-left:1px solid var(--rule);border-right:1px solid var(--rule);border-top:1px solid var(--rule-soft);padding:15px 18px;}
+  .mc.top{border-top:3px solid var(--ink);border-radius:10px 10px 0 0;background:#fdf8ef;}
+  .mc.bot{border-bottom:1px solid var(--rule);border-radius:0 0 10px 10px;}
+  .mc p{margin:5px 0;font-size:12.5px;line-height:1.5;color:var(--body-muted);}
+  .mc p b{color:var(--ink-deep);font-weight:600;}
+  .mc .skun{font-size:10px;font-weight:700;letter-spacing:2.2px;color:var(--brown-light);text-transform:uppercase;}
+  .mc h4{margin:5px 0 0;font-size:18px;font-weight:700;letter-spacing:-0.2px;text-transform:uppercase;color:var(--ink-deep);}
+  .mc .who{font-size:11.5px;color:var(--brown-light);margin-top:5px;font-style:italic;}
+  .chip.skuc{color:var(--brown);border-color:var(--rule);background:#fffdf9;}
+  @media(max-width:980px){.m2{grid-template-columns:1fr;}.m2 .mlab{padding-top:24px;}.mc{border-top:0;}.mc.top{border-top:3px solid var(--ink);}}
+
+  /* ---- interactive cells ---- */
+  .qq{font-size:13px;font-weight:700;color:var(--ink-deep);line-height:1.35;margin:2px 0 9px;}
+  .qopts{display:flex;gap:6px;flex-wrap:wrap;}
+  .qopt{font-family:inherit;cursor:pointer;font-size:10.5px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid var(--rule);background:#fdf8ef;color:var(--brown);transition:all .15s;}
+  .qopt:hover{border-color:var(--green);color:var(--green-deep);}
+  .qopt.on{background:var(--ink);border-color:var(--ink);color:var(--cream);}
+  .qa{display:none;margin-top:9px;padding:9px 12px;background:#fdf8ef;border-left:3px solid var(--green);border-radius:0 6px 6px 0;}
+  .qa.on{display:block;}
+  .qa p{margin:0;}
+  .qstat{margin-top:11px;border-top:1px dashed var(--rule-soft);padding-top:9px;font-size:12px;line-height:1.55;color:var(--body-muted);}
+  .qstat b{color:var(--ink-deep);font-weight:600;}
+
+  .qagate{display:block;margin-top:7px;color:#c23c33;}
+  .qagate b{color:#c23c33;font-weight:700;}
+
+  .qhint{font-size:9.5px;font-weight:600;letter-spacing:0.9px;text-transform:uppercase;color:var(--brown-light);margin-left:6px;white-space:nowrap;}
+  .qaflag{display:flex;gap:12px;align-items:flex-start;background:rgba(246,89,79,.05);border:1px solid rgba(246,89,79,.3);border-left:3px solid var(--coral);border-radius:8px;padding:12px 15px;margin:16px 0 2px;max-width:860px;}
+  .qaflag-i{width:26px;height:26px;border-radius:7px;background:var(--coral);display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .qaflag-i svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;}
+  .qaflag div{font-size:12.5px;line-height:1.5;color:var(--body-muted);}
+  .qaflag b{color:#c23c33;font-weight:700;}
+
+  .qgate{grid-column:1/-1;display:flex;align-items:center;gap:8px;padding:7px 0;}
+  .qgate .qaflag-i{width:15px;height:15px;border-radius:4px;background:rgba(246,89,79,.85);}
+  .qgate .qaflag-i svg{width:9px;height:9px;}
+  .qgate-t{font-size:9.5px;font-weight:600;letter-spacing:1.3px;text-transform:uppercase;color:rgba(194,60,51,.85);white-space:nowrap;}
+  .qgate-line{flex:1;height:0;border-top:1px dashed rgba(246,89,79,.3);}
+  .mc.cutb{border-bottom:1px solid var(--rule);border-radius:0 0 10px 10px;}
+  .mc.cutt{border-top:1px solid var(--rule);border-radius:10px 10px 0 0;}
+  .mc.cutt.cutb{border-radius:10px;}
+  .mc.bot.cutt{border-radius:10px;}
+  @media(max-width:980px){.qgate{grid-column:auto;}}
+
+  .q-sub{margin-top:10px;padding-top:8px;border-top:1px dashed var(--rule-soft);}
+  .q-sub .qq{font-size:12px;margin-bottom:7px;}
+
+  .sector{display:flex;align-items:center;gap:12px;margin:16px 0 0;flex-wrap:wrap;}
+  .sector-l{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--brown);}
+  .sector-h{font-size:11px;font-style:italic;color:var(--brown-light);}
+  .sopt{font-family:inherit;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;padding:5px 14px;border-radius:20px;border:1px solid var(--rule);background:#fdf8ef;color:var(--brown);transition:all .15s;}
+  .sopt:hover{border-color:var(--green);color:var(--green-deep);}
+  .sopt.on{background:var(--green-deep);border-color:var(--green-deep);color:var(--cream);}
+
+  .tip{position:relative;cursor:help;display:inline-block;font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:var(--brown-light);border:1px dashed var(--rule);border-radius:20px;padding:2px 10px;}
+  .tip:hover{color:var(--green-deep);border-color:var(--green);}
+  .tip:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 9px);right:0;background:var(--ink-deep);color:var(--cream);font-size:12px;letter-spacing:.2px;text-transform:none;font-weight:500;padding:10px 13px;border-radius:8px;width:280px;white-space:normal;line-height:1.45;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.28);}
+  .tip:hover::before{content:"";position:absolute;bottom:calc(100% + 3px);left:24px;border:6px solid transparent;border-top-color:var(--ink-deep);z-index:90;}
+
+  .wlink{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:0.7px;text-transform:uppercase;border:1px solid var(--green);border-radius:4px;padding:1px 7px;color:var(--green-deep);margin-left:4px;white-space:nowrap;}
+  .wlink:hover{background:rgba(0,208,88,.1);}
+  .wlink.up{border:1px dashed var(--amber);color:var(--amber-deep);cursor:default;}
+
+  .exg{font-size:9px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--brown);margin-bottom:3px;}
+
+  #dealsel{font-family:inherit;font-size:12px;font-weight:600;color:var(--ink-deep);background:#fdf8ef;border:1px solid var(--rule);border-radius:7px;padding:6px 10px;max-width:420px;}
+  .dealctx{flex-basis:100%;border-top:1px dashed var(--rule);padding-top:10px;margin-top:4px;font-size:12.5px;line-height:1.5;color:var(--body-muted);}
+  .dealctx b{color:var(--ink-deep);}
+  .dealctx p{margin:4px 0 0;}
+  .dealctx a{font-size:10px;font-weight:700;letter-spacing:0.7px;text-transform:uppercase;border:1px solid var(--blue);border-radius:4px;padding:1px 7px;color:var(--blue-deep);display:inline-block;margin-top:6px;}
+  .dealctx .tbcnote{font-style:italic;color:var(--amber-deep);}
+  .mc.top.hot{border-top-color:var(--green);background:rgba(0,208,88,.07);}
+
+  .ctrlbar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;border:1px solid var(--rule);background:#fdf8ef;border-radius:10px;padding:12px 18px;margin-top:16px;}
+  .ctrlgrp{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .ctrl-div{width:1px;align-self:stretch;background:var(--rule);}
+  .sopt.locked{opacity:.35;pointer-events:none;}
+
+  .m2 .offcol{visibility:hidden;}
+  .dealnote{margin-top:10px;padding:9px 12px;background:rgba(44,155,199,.07);border-left:3px solid var(--blue);border-radius:0 6px 6px 0;font-size:12px;line-height:1.5;color:var(--body-muted);}
+  .dealnote b{color:var(--ink-deep);font-weight:600;}
+  .dealnote .dl{font-size:8.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--blue-deep);display:block;margin-bottom:3px;}
+
+  .dv-q{font-size:30px;font-weight:700;letter-spacing:-0.9px;color:var(--ink);margin:22px 0 0;line-height:1.02;}
+  .dv-q .hl{color:var(--green);}
+  .refs{margin-top:34px;border-top:1px solid var(--rule);padding-top:16px;}
+  .refs-l{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--brown);display:block;margin-bottom:6px;}
+  .refs-q{font-size:13.5px;color:var(--body-muted);margin:10px 0 12px;max-width:760px;line-height:1.5;}
+  .reflink{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.7px;text-transform:uppercase;border:1px solid var(--rule);border-radius:7px;padding:7px 14px;color:var(--brown);margin:0 8px 8px 0;transition:all .15s;}
+  .reflink:hover{border-color:var(--green);color:var(--green-deep);}
+
+  .events{margin-top:26px;padding-left:32px;max-width:760px;}
+  .evt{display:flex;gap:14px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--rule-soft);}
+  .evt:last-child{border-bottom:0;}
+  .evt-d{flex:0 0 96px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--green-deep);font-variant-numeric:tabular-nums;}
+  .evt-t{font-size:13px;font-weight:700;letter-spacing:-0.1px;color:var(--ink-deep);display:inline;}
+  .evt-s{font-size:11.5px;color:var(--body-muted);line-height:1.4;margin-top:1px;}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <p class="overline">IntentOne · Product · Strictly Confidential</p>
+  <h1>IntentOne <span class="hl">Product Hub</span></h1>
+  <div class="tabs" id="tabsrow" style="display:none">
+    <button class="tab" data-view="home">← Hub</button>
+    <button class="tab" data-view="deliver">Deliver · serving clients today</button>
+    <button class="tab" data-view="build">Build · the roadmap</button>
+  </div>
+
+
+  <div class="view on" id="view-home">
+  <hr class="divider">
+  <div class="modes">
+    <button class="mode" data-view="deliver">
+      <div class="mode-kicker">01 · Serving clients today</div>
+      <h3>Deliver</h3>
+      <p>Three packages, one method. The fixed path every client takes from contract to live campaigns — infrastructure, foundations, ingestion, activation — with two QA gates we keep.</p>
+      <div class="mode-meta"><span class="chip skuc">01 SDK + CRM</span><span class="chip skuc">02 Weblogs + CRM</span><span class="chip skuc">03 CRM Only</span></div>
+      <div class="mode-go">Enter Deliver →</div>
+    </button>
+    <button class="mode" data-view="build">
+      <div class="mode-kicker">02 · The roadmap</div>
+      <h3>Build</h3>
+      <p>Five pillars from Onboard to Activate. What's shipped, what Bash Week delivered, and what comes next — every card a live Linear project with its user story and prototype.</p>
+      <div class="mode-meta"><span class="mdot" style="background:#4F46E5"></span><span class="mdot" style="background:#26b5ce"></span><span class="mdot" style="background:#DC2626"></span><span class="mdot" style="background:#D97706"></span><span class="mdot" style="background:#059669"></span></div>
+      <div class="mode-go">Enter Build →</div>
+    </button>
+  </div>
+
+  <div class="events">
+    <span class="refs-l">What's coming</span>
+    <div class="evt"><span class="evt-d">3 Aug</span><div><div class="evt-t">IntentOne product walkthrough</div><div class="evt-s">The full Deliver + Build tour, with the outputs of Bash Week baked in.</div></div></div>
+    <div class="evt"><span class="evt-d">Late w/c 3 Aug</span><div><div class="evt-t">Costing, connected</div><div class="evt-s">Adam Wilson's costing tool wired into this hub — answer the path, get a cost.</div></div></div>
+    <div class="evt"><span class="evt-d">Early Aug</span><div><div class="evt-t">Parimatch goes live</div><div class="evt-s">Our first mid-market IntentOne client, low-touch by design — the first real test of the SDK provisioning agent.</div></div></div>
+    <div class="evt"><span class="evt-d">13 Aug</span><div><div class="evt-t">IntentOne Programme Board</div><div class="evt-s">The full programme review, with Bash Week outcomes on the table.</div></div></div>
+  </div>
+  </div><!-- /view-home -->
+  <div class="view" id="view-build">
+  <hr class="divider">
+  <p class="dv-lede">On top of what's <b>shipped</b>, every project in Bash Week and Next closes the gap to end-to-end. Open a pillar — each card carries its Linear user story and, where one exists, a prototype.</p>
+
+  <div class="flowlabel">
+    <span class="t">The end-to-end loop</span>
+    <span class="hint">Click a pillar to open</span>
+  </div>
+  <div class="pipeline" id="pipeline"></div>
+
+  <div id="details"></div>
+  </div><!-- /view-build -->
+
+  <div class="view" id="view-deliver">
+  <hr class="divider">
+  <h2 class="dv-q">How do we deliver <span class="hl">IntentOne</span> today?</h2>
+
+  <div class="ctrlbar">
+    <div class="ctrlgrp"><span class="sector-l">Sector</span><div class="qopts"><button class="sopt">Telco</button><button class="sopt">Finance</button><button class="sopt">Retail</button><button class="sopt">Other</button></div></div>
+    <span class="ctrl-div"></span>
+    <div class="ctrlgrp"><span class="sector-l">Lightfield deal</span><select id="dealsel">
+      <option value="">— select an active opportunity —</option>
+      <option value="0">TravelClub · Edge — Retail · Europe · Discovery</option>
+      <option value="1">Vivo · Edge — Telco · LATAM · Proposal</option>
+      <option value="2">Mashreq Bank — Finance · MENA · Discovery</option>
+      <option value="3">Charter · Spectrum Lift — Telco · NAM · Qualification</option>
+      <option value="4">Parimatch · Ginja Casino — Other · Europe · Contracts</option>
+      <option value="5">Telkom Indonesia · White Label — Telco · APAC · Discovery</option>
+      <option value="6">Mobileum · Solari Mobile — Telco · Weblogs demo</option>
+    </select></div>
+    <div id="dealctx" class="dealctx" hidden></div>
+  </div>
+
+
+  <div class="m2">
+    <div></div>
+    <div class="mc top"><div class="skun">SKU 01</div><h4>SDK + CRM</h4><div class="who">Fishka · Vivo · Verizon · Parimatch</div></div>
+    <div class="mc top"><div class="skun">SKU 02</div><h4>Weblogs + CRM</h4><div class="who">Telcos only · MTN · Verizon</div></div>
+    <div class="mc top"><div class="skun">SKU 03</div><h4>CRM Only</h4><div class="who">Arcos Dorado</div></div>
+
+    <div class="mlab"><span class="ptile" style="background:#7d5d43"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M7 7.5h.01M7 16.5h.01"/></svg></span><div class="rn">Infrastructure</div><div class="rs">Decided pre-contract</div></div>
+    <div class="mc"><div class="q"><div class="qq">Where must the application and the data live?</div><div class="qopts"><button class="qopt">Their environment</button><button class="qopt">Our cloud</button></div><div class="qa"><p><b>Red Box.</b> Dedicated single-tenant, priced cost-plus. Architecture review before any commercial commitment; typically 2–4 months to live.</p><div class="q q-sub"><div class="qq">Their cloud, or on-prem?</div><div class="qopts"><button class="qopt">Their cloud</button><button class="qopt">On-prem / air-gapped</button></div><div class="qa"><p>Dedicated environment in the client's own account, run on OpenShift — they own account, network and data plane; we operate it remotely. Databricks by default, our equivalent layer where it isn't available. Customer-managed keys supported.</p><div class="q q-sub"><div class="qq">Which cloud?</div><div class="qopts"><button class="qopt">AWS</button><button class="qopt">Azure</button><button class="qopt">GCP</button></div><div class="qa"><p><b>Live.</b> ROSA (OpenShift on AWS) reference architecture — the proven pattern.</p></div><div class="qa"><p><b>Live.</b> ARO reference architecture; MTN South Africa is the working pattern (site-to-site VPN back to our AWS).</p></div><div class="qa"><p><b>Landing Sep 2026.</b> GKE route being built with Searce (Google-funded), BT first. Red Box on GCP is feasible now on this pattern.</p></div></div></div><div class="qa"><p><b>Software appliance on client hardware</b> — Kubernetes/OpenShift, can run fully air-gapped; NexusOne provides the cloud-equivalent services (MTN Nigeria is the live pattern). Slowest start: hardware must be procured, racked and networked before anything else.</p><p><b>Client provides:</b> racked hardware to our spec (NX1: 3-node cluster + all-flash S3 storage, one rack), network segmentation and firewalls, power/cooling, and a patching channel. <b>We provide:</b> packaged images, install tooling and install support.</p></div></div><div class="q q-sub"><div class="qq">How will our engineers access the environment?</div><div class="qopts"><button class="qopt">Bastion / VDI</button><button class="qopt">Scoped VPN</button><button class="qopt">Client workspace</button><button class="qopt">Push-only</button></div><div class="qa"><p>Client-provisioned bastion host or virtual desktop — the standard, fully auditable path.</p></div><div class="qa"><p>Scoped site-to-site VPN or scheduled connectivity windows — the MTN pattern.</p></div><div class="qa"><p>Everything inside the client's own workspace, every release through their change process — the Verizon (Citrix) pattern. Slowest cadence; price the ops burden in.</p></div><div class="qa"><p>No inbound access at all: the client initiates every connection and exports diagnostics. Supported, but it changes the integration design — establish this early.</p></div></div></div><div class="qa"><p><b>Blue Box.</b> Shared multi-tenant platform on a supported region — the default classification. Configuration only, published pricing; typically 2–4 weeks from contract to first opportunity.</p><div class="q multi q-sub"><div class="qq">Data residency — where must data stay? <span class="qhint">select all that apply</span></div><div class="qopts"><button class="qopt">EU</button><button class="qopt">UK</button><button class="qopt">US</button><button class="qopt">Brazil</button><button class="qopt">South Africa</button><button class="qopt">None / flexible</button></div></div><div class="qstat">Residency is met by region choice — AWS today, Azure live, GCP from Sep 2026. If no supported region fits (e.g. strict in-country rules with no local cloud), the deal is <b>Red Box</b>.</div></div></div></div>
+    <div class="mc"><div class="q"><div class="qq">Where must the application and the data live?</div><div class="qopts"><button class="qopt">Their environment</button><button class="qopt">Our cloud</button></div><div class="qa"><p><b>Red Box.</b> Dedicated single-tenant, priced cost-plus. Architecture review before any commercial commitment; typically 2–4 months to live.</p><div class="q q-sub"><div class="qq">Their cloud, or on-prem?</div><div class="qopts"><button class="qopt">Their cloud</button><button class="qopt">On-prem / air-gapped</button></div><div class="qa"><p>Dedicated environment in the client's own account, run on OpenShift — they own account, network and data plane; we operate it remotely. Databricks by default, our equivalent layer where it isn't available. Customer-managed keys supported.</p><div class="q q-sub"><div class="qq">Which cloud?</div><div class="qopts"><button class="qopt">AWS</button><button class="qopt">Azure</button><button class="qopt">GCP</button></div><div class="qa"><p><b>Live.</b> ROSA (OpenShift on AWS) reference architecture — the proven pattern.</p></div><div class="qa"><p><b>Live.</b> ARO reference architecture; MTN South Africa is the working pattern (site-to-site VPN back to our AWS).</p></div><div class="qa"><p><b>Landing Sep 2026.</b> GKE route being built with Searce (Google-funded), BT first. Red Box on GCP is feasible now on this pattern.</p></div></div></div><div class="qa"><p><b>Software appliance on client hardware</b> — Kubernetes/OpenShift, can run fully air-gapped; NexusOne provides the cloud-equivalent services (MTN Nigeria is the live pattern). Slowest start: hardware must be procured, racked and networked before anything else.</p><p><b>Client provides:</b> racked hardware to our spec (NX1: 3-node cluster + all-flash S3 storage, one rack), network segmentation and firewalls, power/cooling, and a patching channel. <b>We provide:</b> packaged images, install tooling and install support.</p></div></div><div class="q q-sub"><div class="qq">How will our engineers access the environment?</div><div class="qopts"><button class="qopt">Bastion / VDI</button><button class="qopt">Scoped VPN</button><button class="qopt">Client workspace</button><button class="qopt">Push-only</button></div><div class="qa"><p>Client-provisioned bastion host or virtual desktop — the standard, fully auditable path.</p></div><div class="qa"><p>Scoped site-to-site VPN or scheduled connectivity windows — the MTN pattern.</p></div><div class="qa"><p>Everything inside the client's own workspace, every release through their change process — the Verizon (Citrix) pattern. Slowest cadence; price the ops burden in.</p></div><div class="qa"><p>No inbound access at all: the client initiates every connection and exports diagnostics. Supported, but it changes the integration design — establish this early.</p></div></div></div><div class="qa"><p><b>Blue Box.</b> Shared multi-tenant platform on a supported region — the default classification. Configuration only, published pricing; typically 2–4 weeks from contract to first opportunity.</p><div class="q multi q-sub"><div class="qq">Data residency — where must data stay? <span class="qhint">select all that apply</span></div><div class="qopts"><button class="qopt">EU</button><button class="qopt">UK</button><button class="qopt">US</button><button class="qopt">Brazil</button><button class="qopt">South Africa</button><button class="qopt">None / flexible</button></div></div><div class="qstat">Residency is met by region choice — AWS today, Azure live, GCP from Sep 2026. If no supported region fits (e.g. strict in-country rules with no local cloud), the deal is <b>Red Box</b>.</div></div></div></div>
+    <div class="mc"><div class="q"><div class="qq">Where must the application and the data live?</div><div class="qopts"><button class="qopt">Their environment</button><button class="qopt">Our cloud</button></div><div class="qa"><p><b>Red Box.</b> Dedicated single-tenant, priced cost-plus. Architecture review before any commercial commitment; typically 2–4 months to live.</p><div class="q q-sub"><div class="qq">Their cloud, or on-prem?</div><div class="qopts"><button class="qopt">Their cloud</button><button class="qopt">On-prem / air-gapped</button></div><div class="qa"><p>Dedicated environment in the client's own account, run on OpenShift — they own account, network and data plane; we operate it remotely. Databricks by default, our equivalent layer where it isn't available. Customer-managed keys supported.</p><div class="q q-sub"><div class="qq">Which cloud?</div><div class="qopts"><button class="qopt">AWS</button><button class="qopt">Azure</button><button class="qopt">GCP</button></div><div class="qa"><p><b>Live.</b> ROSA (OpenShift on AWS) reference architecture — the proven pattern.</p></div><div class="qa"><p><b>Live.</b> ARO reference architecture; MTN South Africa is the working pattern (site-to-site VPN back to our AWS).</p></div><div class="qa"><p><b>Landing Sep 2026.</b> GKE route being built with Searce (Google-funded), BT first. Red Box on GCP is feasible now on this pattern.</p></div></div></div><div class="qa"><p><b>Software appliance on client hardware</b> — Kubernetes/OpenShift, can run fully air-gapped; NexusOne provides the cloud-equivalent services (MTN Nigeria is the live pattern). Slowest start: hardware must be procured, racked and networked before anything else.</p><p><b>Client provides:</b> racked hardware to our spec (NX1: 3-node cluster + all-flash S3 storage, one rack), network segmentation and firewalls, power/cooling, and a patching channel. <b>We provide:</b> packaged images, install tooling and install support.</p></div></div><div class="q q-sub"><div class="qq">How will our engineers access the environment?</div><div class="qopts"><button class="qopt">Bastion / VDI</button><button class="qopt">Scoped VPN</button><button class="qopt">Client workspace</button><button class="qopt">Push-only</button></div><div class="qa"><p>Client-provisioned bastion host or virtual desktop — the standard, fully auditable path.</p></div><div class="qa"><p>Scoped site-to-site VPN or scheduled connectivity windows — the MTN pattern.</p></div><div class="qa"><p>Everything inside the client's own workspace, every release through their change process — the Verizon (Citrix) pattern. Slowest cadence; price the ops burden in.</p></div><div class="qa"><p>No inbound access at all: the client initiates every connection and exports diagnostics. Supported, but it changes the integration design — establish this early.</p></div></div></div><div class="qa"><p><b>Blue Box.</b> Shared multi-tenant platform on a supported region — the default classification. Configuration only, published pricing; typically 2–4 weeks from contract to first opportunity.</p><div class="q multi q-sub"><div class="qq">Data residency — where must data stay? <span class="qhint">select all that apply</span></div><div class="qopts"><button class="qopt">EU</button><button class="qopt">UK</button><button class="qopt">US</button><button class="qopt">Brazil</button><button class="qopt">South Africa</button><button class="qopt">None / flexible</button></div></div><div class="qstat">Residency is met by region choice — AWS today, Azure live, GCP from Sep 2026. If no supported region fits (e.g. strict in-country rules with no local cloud), the deal is <b>Red Box</b>.</div></div></div></div>
+
+    <div class="mlab"><span class="ptile" style="background:#4F46E5"><svg viewBox="0 0 24 24"><path d="M4 21h16M6 21V6l9-2v3M6 9h9M15 7l4 1v12M9 21v-6h4v6"/></svg></span><div class="rn">Client Foundations</div><div class="rs">Users · goals · context</div></div>
+    <div class="mc"><div class="q q-goals"><div class="qq">What goals are the client trying to achieve?</div><div class="qopts"><button class="qopt">Acquire</button><button class="qopt">Uplift</button><button class="qopt">Retain</button><button class="qopt">Enrich</button></div><div class="qa"><p><b>New customers.</b> Goals set in-product drive acquisition opportunities — including Google Ads audiences.</p></div><div class="qa"><p><b>More from existing customers.</b> Goals target upsell and cross-sell moments.</p></div><div class="qa"><p><b>Stop customers leaving.</b> Goals target churn risk and win-back.</p></div><div class="qa"><p><b>Better data enablement</b> for the client's internal use — IntentAI enrichment delivered into their stack.</p></div></div></div>
+    <div class="mc"><div class="q q-goals"><div class="qq">What goals are the client trying to achieve?</div><div class="qopts"><button class="qopt">Acquire</button><button class="qopt">Uplift</button><button class="qopt">Retain</button><button class="qopt">Enrich</button></div><div class="qa"><p><b>New customers.</b> Goals set in-product drive acquisition opportunities — including Google Ads audiences.</p></div><div class="qa"><p><b>More from existing customers.</b> Goals target upsell and cross-sell moments.</p></div><div class="qa"><p><b>Stop customers leaving.</b> Goals target churn risk and win-back.</p></div><div class="qa"><p><b>Better data enablement</b> for the client's internal use — IntentAI enrichment delivered into their stack.</p></div></div></div>
+    <div class="mc"><div class="q q-goals"><div class="qq">What goals are the client trying to achieve?</div><div class="qopts"><button class="qopt">Acquire</button><button class="qopt">Uplift</button><button class="qopt">Retain</button><button class="qopt">Enrich</button></div><div class="qa"><p><b>New customers.</b> Goals set in-product drive acquisition opportunities — including Google Ads audiences.</p></div><div class="qa"><p><b>More from existing customers.</b> Goals target upsell and cross-sell moments.</p></div><div class="qa"><p><b>Stop customers leaving.</b> Goals target churn risk and win-back.</p></div><div class="qa"><p><b>Better data enablement</b> for the client's internal use — IntentAI enrichment delivered into their stack.</p></div></div></div>
+
+    <div class="mlab"><span class="ptile" style="background:#26b5ce"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg></span><div class="rn">Ingestion</div><div class="rs">Self-serve, QA-gated</div></div>
+    <div class="mc cutb"><div class="q"><div class="qq">Do the client's mobile developers use AI coding tools?</div><div class="qopts"><button class="qopt">Yes</button><button class="qopt">No</button></div><div class="qa"><p>Their developers get our <b>in-IDE agent</b>: it instruments their real source code and verifies the integration — production-ready in about a day.</p></div><div class="qa"><p>An <b>agent-guided walk-through</b> takes them through SDK installation step by step, with our team on hand.</p></div></div></div>
+    <div class="mc cutb"><div class="q"><div class="qq">How will weblog data arrive?</div><div class="qopts"><button class="qopt">S3 bucket</button><button class="qopt">Webhook / API</button><button class="qopt">Databricks</button></div><div class="qa"><p>The client points IntentOne at their <b>S3 bucket</b> — behavioural data flows without an engineer-led integration.</p></div><div class="qa"><p>Pushed via <b>webhook or API</b> into the open listener; the schema is handled dynamically.</p></div><div class="qa"><p>Platform-to-platform via <b>Delta Sharing</b> from the client's Databricks (or Snowflake) — no files, no webhooks. The Charter pattern.</p></div></div></div>
+    <div class="mc cutb"><div class="q"><div class="qq">Where does the client's CRM data live today?</div><div class="qopts"><button class="qopt">S3</button><button class="qopt">Databricks</button><button class="qopt">Salesforce</button><button class="qopt">HubSpot</button><button class="qopt">Zendesk</button><button class="qopt">Intercom</button><button class="qopt">Freshdesk</button></div><div class="qa"><p>Connected via the embedded <b>S3 connector</b>, auto-mapped to the data spec with honest gap analysis.</p></div><div class="qa"><p>Connected via the embedded <b>Databricks connector</b>, auto-mapped to the data spec with honest gap analysis.</p></div><div class="qa"><p>Embedded <b>Salesforce connector</b>: accounts, contacts, leads and opportunities — auto-mapped to the data spec with honest gap analysis.</p></div><div class="qa"><p>Embedded <b>HubSpot connector</b>: contacts, companies, deals and tickets — auto-mapped to the data spec with honest gap analysis.</p></div><div class="qa"><p>Embedded <b>Zendesk Support connector</b>: tickets, users and organisations — auto-mapped to the data spec with honest gap analysis.</p></div><div class="qa"><p>Embedded <b>Intercom connector</b>: conversations, contacts and companies — auto-mapped to the data spec with honest gap analysis.</p></div><div class="qa"><p>Embedded <b>Freshdesk connector</b>: tickets, contacts and companies — auto-mapped to the data spec with honest gap analysis.</p></div></div><div class="qstat"><span class="tip" data-tip="The NX1 catalogue goes beyond CRM: billing (Stripe, Chargebee, Braintree, NetSuite, QuickBooks, Xero), product analytics (Amplitude, Mixpanel, GA4, Gainsight PX), marketing (Klaviyo, Mailchimp, Facebook / Google / LinkedIn / TikTok Ads), commerce (Shopify) and file stores (Google Drive, SharePoint) — every source lands auto-mapped to the data spec.">30+ more sources in the NX1 catalogue</span></div></div>
+
+    <div class="qgate"><span class="qgate-line"></span><span class="qaflag-i"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 5h11l-2 3.5L16 12H5"/></svg></span><span class="qgate-t">QA gate · human-in-the-loop validation of mapping</span><span class="qgate-line"></span></div>
+
+    <div class="mlab"><span class="ptile" style="background:#059669"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><div class="rn">Activation</div><div class="rs">Ours or theirs</div></div>
+    <div class="mc cutt cutb"><div class="q"><div class="qq">Which campaign management system will the client use?</div><div class="qopts"><button class="qopt">IntentOne</button><button class="qopt">Their own system</button></div><div class="qa"><p><b>Multichannel from the product</b>: push, SMS, RCS, WhatsApp — with creative generated per channel.</p></div><div class="qa"><p><b>Direct integration</b> with the client's campaign system, scoped per system — or audience, opportunity and enrichment exports.</p><div class="q multi q-sub"><div class="qq">Which system? <span class="qhint">select all that apply</span></div><div class="qopts"><button class="qopt">Pega</button><button class="qopt">Adobe</button><button class="qopt">Salesforce MC</button><button class="qopt">Braze</button><button class="qopt">Other</button></div></div></div></div></div>
+    <div class="mc cutt cutb"><div class="q"><div class="qq">Which campaign management system will the client use?</div><div class="qopts"><button class="qopt">IntentOne</button><button class="qopt">Their own system</button></div><div class="qa"><p><b>Multichannel from the product</b>: push, SMS, RCS, WhatsApp — with creative generated per channel.</p></div><div class="qa"><p><b>Direct integration</b> with the client's campaign system, scoped per system — or audience, opportunity and enrichment exports.</p><div class="q multi q-sub"><div class="qq">Which system? <span class="qhint">select all that apply</span></div><div class="qopts"><button class="qopt">Pega</button><button class="qopt">Adobe</button><button class="qopt">Salesforce MC</button><button class="qopt">Braze</button><button class="qopt">Other</button></div></div></div></div></div>
+    <div class="mc cutt cutb"><div class="q"><div class="qq">Which campaign management system will the client use?</div><div class="qopts"><button class="qopt">IntentOne</button><button class="qopt">Their own system</button></div><div class="qa"><p><b>Multichannel from the product</b>: push, SMS, RCS, WhatsApp — with creative generated per channel.</p></div><div class="qa"><p><b>Direct integration</b> with the client's campaign system, scoped per system — or audience, opportunity and enrichment exports.</p><div class="q multi q-sub"><div class="qq">Which system? <span class="qhint">select all that apply</span></div><div class="qopts"><button class="qopt">Pega</button><button class="qopt">Adobe</button><button class="qopt">Salesforce MC</button><button class="qopt">Braze</button><button class="qopt">Other</button></div></div></div></div></div>
+
+    <div class="qgate"><span class="qgate-line"></span><span class="qaflag-i"><svg viewBox="0 0 24 24"><path d="M5 21V4M5 5h11l-2 3.5L16 12H5"/></svg></span><span class="qgate-t">QA gate · activation testing</span><span class="qgate-line"></span></div>
+
+    <div class="mlab"><span class="ptile" style="background:#D97706"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10c.7.7 1 1.4 1 2h6c0-.6.3-1.3 1-2a6 6 0 0 0-4-10Z"/></svg></span><div class="rn">Support</div><div class="rs">Maximising opportunity ROI</div></div>
+    <div class="mc bot cutt"><div class="q multi"><div class="qq">How will the client create value from their opportunities? <span class="qhint">select all that apply</span></div><div class="qopts"><button class="qopt">Autopilot</button><button class="qopt">Co-pilot</button></div><div class="qa"><p>The <b>opportunity agents</b> generate a ranked, explained stream from the client's goals on a schedule. CS runs a regular hub review with the client — tune goals, activate the top opportunities, retire the rest.</p></div><div class="qa"><p>Campaign managers <b>build and refine opportunities in chat</b>. We enable their team — prompt patterns, targeting controls and exclusions, creative review — until the habit sticks.</p></div></div><div class="qstat"><b>ROI discipline</b>: every activated opportunity is measured against its goal, results feed back into the client's context, and value (ROI / CLTV) is reported in their business reviews.</div></div>
+    <div class="mc bot cutt"><div class="q multi"><div class="qq">How will the client create value from their opportunities? <span class="qhint">select all that apply</span></div><div class="qopts"><button class="qopt">Autopilot</button><button class="qopt">Co-pilot</button></div><div class="qa"><p>The <b>opportunity agents</b> generate a ranked, explained stream from the client's goals on a schedule. CS runs a regular hub review with the client — tune goals, activate the top opportunities, retire the rest.</p></div><div class="qa"><p>Campaign managers <b>build and refine opportunities in chat</b>. We enable their team — prompt patterns, targeting controls and exclusions, creative review — until the habit sticks.</p></div></div><div class="qstat"><b>ROI discipline</b>: every activated opportunity is measured against its goal, results feed back into the client's context, and value (ROI / CLTV) is reported in their business reviews.</div></div>
+    <div class="mc bot cutt"><div class="q multi"><div class="qq">How will the client create value from their opportunities? <span class="qhint">select all that apply</span></div><div class="qopts"><button class="qopt">Autopilot</button><button class="qopt">Co-pilot</button></div><div class="qa"><p>The <b>opportunity agents</b> generate a ranked, explained stream from the client's goals on a schedule. CS runs a regular hub review with the client — tune goals, activate the top opportunities, retire the rest.</p></div><div class="qa"><p>Campaign managers <b>build and refine opportunities in chat</b>. We enable their team — prompt patterns, targeting controls and exclusions, creative review — until the habit sticks.</p></div></div><div class="qstat"><b>ROI discipline</b>: every activated opportunity is measured against its goal, results feed back into the client's context, and value (ROI / CLTV) is reported in their business reviews.</div></div>
+  </div>
+
+  <div class="refs">
+    <h2 class="dv-q">How does <span class="hl">IntentOne</span> compare to Lift and Edge?</h2>
+    <p class="refs-q">The delivery recipes, step by step against the legacy baseline:</p>
+    <a class="reflink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Delivery-Recipe-SDK-Ingestion-Edge-vs-IntentOne_su98Ud14" target="_blank" rel="noopener">SDK ingestion · Edge vs IntentOne ↗</a>
+    <a class="reflink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Delivery-Recipe-Weblog-Ingestion-Lift-Edge-Lift-vs-IntentOne_suJZ0l4i" target="_blank" rel="noopener">Weblog ingestion · Lift / Edge + Lift vs IntentOne ↗</a>
+  </div>
+  </div><!-- /view-deliver -->
+
+  <footer>
+    <span>Intent HQ · Product-driven · Strictly Confidential</span>
+    <span class="note">Shipped = Q2 2026 product update, plus newly-completed Linear projects since. Bash Week / Next / Later + user stories refreshed from Linear and meeting notes (28 Jul 2026). Bash Week edition: the Bash Week column is the 22–29 Jul build-week scope, ✓ marks projects completed during the week, and final demos land at the closing ceremony 30 Jul. Drill-down into each pillar initiative — some items merged or renamed as Linear's own board evolved (e.g. invite/RBAC/SSO work consolidated into one project). A few Later stubs have no story in Linear yet. Deliver view is the standard delivery method per package (from the Product Definition, 28 Jul 2026), written assuming the Bash Week scope ships.</span>
+  </footer>
+
+</div>
+
+<script>
+const ICONS = {
+  crane:'<path d="M4 21h16M6 21V6l9-2v3M6 9h9M15 7l4 1v12M9 21v-6h4v6"/>',
+  db:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+  bar:'<path d="M4 20V10M10 20V4M16 20v-7M4 20h16"/>',
+  bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10c.7.7 1 1.4 1 2h6c0-.6.3-1.3 1-2a6 6 0 0 0-4-10Z"/>',
+  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  server:'<rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><path d="M7 7.5h.01M7 16.5h.01"/>',
+  flag:'<path d="M5 21V4M5 5h11l-2 3.5L16 12H5"/>'
+};
+
+const P = [
+  {
+    verb:'Onboard',name:'Client Foundations',full:'Client Foundations',icon:'crane',color:'#4F46E5',pct:48,
+    url:'https://linear.app/intent-hq/initiative/client-foundations-c7d4540002b5',
+    status:'Onboarding runs. Closing the gap on data readiness, roles/access, billing and context.',
+    shipped:[
+      {t:`End-to-end self-serve onboarding — sign-up to workspace`,s:`As a prospect, I want to sign up with just my email and company name and land in a modelled workspace, so that I can start using IntentOne in minutes without an onboarding call.`},
+      {t:`Goals live in the product, driving opportunity generation`,s:`As a marketer, I want to set and edit business goals in the product, so that opportunity generation runs from my actual objectives.`},
+      {t:`Per-client branding & compliance funnel`,s:`As a client, I want my own branding and compliance criteria applied, so that the workspace reflects my brand and only targets compliant users.`},
+      {t:`Client context / knowledge base used by agents`,s:`As a client, I want my product, pricing and uploaded context available to the agents, so that insights and opportunities reflect my business.`}
+    ],
+    now:[
+      {t:`Demo IntentOne without integrations, synthetic data from a data-spec`,date:`20 Jul`,m:`Bash Week: generator exposed as API`,s:`As a member of the sales team, I want a demo-ready IntentOne workspace generated from a client's goals alone — ~50K synthetic profiles calibrated to their sector — so that I can demo any sector in minutes without connecting any real customer data.`,url:'https://linear.app/intent-hq/project/demo-intentone-without-integrations-synthetic-data-from-a-data-spec-b96fbb3bf734',p:'https://www.loom.com/share/bc65ad6373a944d39cd24d966e30f073'},
+      {t:`Make any new dataset usable in IntentOne`,hi:true,s:`When new profile data lands from pipelines, synthetic generation, sales demos or client-controlled sources, I want IntentOne to prepare the catalog/metrics/buckets and promote it automatically, so that the workspace is ready without today's Databricks-only coupling.`,url:'https://linear.app/intent-hq/project/make-any-new-dataset-usable-in-intent-one-bb7c51d4dff0'},
+      {t:`Initial context capture is deep enough on products & pricing`,s:`As a client admin onboarding my organisation, I want the initial scrape to go deep on our products, services, and pricing and to flag the specific gaps it can't fill, so that agents generate opportunities from full context rather than thin data.`,url:'https://linear.app/intent-hq/project/initial-context-capture-is-deep-enough-on-products-and-pricing-651f772ce87a',p:'https://patagoniaknowledgebaseprototype-1-bumuyz052.vercel.app/'},
+      {t:`Uploaded context is connected & actually used by agents`,s:`As a user who's uploaded my own context, I want agents to actually retrieve and use it — tagged well enough to find the relevant part even as volume grows — so that my context shapes insights and opportunities the same way auto-scraped data does.`,url:'https://linear.app/intent-hq/project/uploaded-context-is-connected-and-actually-used-by-agents-2be6c4943d2a',p:'https://patagoniaknowledgebaseprototype-1-bumuyz052.vercel.app/'},
+      {t:`Context stays current through ongoing market & competitor updates`,date:`7 Aug`,s:`As a campaign manager, I want context to refresh on an ongoing schedule with updated market and competitor data feeding opportunity generation, so that my opportunities and insights stay current instead of decaying from the point of onboarding.`,url:'https://linear.app/intent-hq/project/context-stays-current-through-ongoing-market-and-competitor-updates-d0301933182b',p:'https://patagoniaknowledgebaseprototype-1-bumuyz052.vercel.app/'}
+    ],
+    next:[
+      {t:`Show clients their usage, trial, and let them convert`,date:`24 Jul`,m:`shared across 4 pillars · past target (24 Jul)`,s:`Clients see what they've consumed and their trial status inside their own workspace, and can convert their trial to paid via Stripe without a sales call.`,url:'https://linear.app/intent-hq/project/show-clients-their-usage-trial-and-let-them-convert-2b1abc9418a1',p:'http://intentone.vercel.app/intentone.html'},
+      {t:`Meter billable events into Orb`,m:`new · 21 Jul`,s:`Client usage is metered automatically: billable actions stream into Orb in real time, so pricing and plans can flex without engineering rebuilding the pipeline.`,url:'https://linear.app/intent-hq/project/meter-billable-events-into-orb-3980bd36ce02',p:'https://archival-chi.vercel.app/usage-metering.html'},
+      {t:`Sign in/up with Google, Apple, or Microsoft`,m:`new · 21 Jul`,s:`A user can sign up and sign in with an account they already have — Google, Apple, or Microsoft — with no IntentOne-specific password to create.`,url:'https://linear.app/intent-hq/project/sign-inup-with-google-apple-or-microsoft-0c1bcaa0d106'},
+      {t:`Team and Role management and Inviting new users`,date:`7 Aug`,s:`As a client admin, I want to invite my colleagues, assign each a role at invite time, and control who can trigger costly or high-risk actions — including logging in via our own company SSO — so that my team can manage and secure itself without going through Intent HQ.`,url:'https://linear.app/intent-hq/project/team-and-role-management-and-inviting-new-users-ba912be4f144',p:'https://staticly-seven.vercel.app/'},
+      {t:`Prospects to be able to provision a workspace from our website`,s:`As a prospect on Intent HQ's website, I want to click straight into IntentOne's onboarding from the site, so that I can provision my own workspace without waiting for a sales hand-off.`,url:'https://linear.app/intent-hq/project/prospects-to-be-able-to-provision-a-workspace-from-our-website-9a874f34ecdb'}
+    ],
+    later:[
+      {t:`Product team can see how people actually use IntentOne (behaviour tracking)`,url:'https://linear.app/intent-hq/project/product-team-can-see-how-people-actually-use-intentone-behaviour-3fe57884f664'},
+      {t:`IntentOne adapts to any screen, not just scales to fit`,url:'https://linear.app/intent-hq/project/intentone-adapts-to-any-screen-not-just-scales-to-fit-231dc37b5ad5'},
+      {t:`Ensure that campaign results and outcomes are re-used as context`,url:'https://linear.app/intent-hq/project/ensure-that-campaign-results-and-outcomes-are-re-used-as-context-e9a2e439b3e9',p:'https://patagoniaknowledgebaseprototype-1-bumuyz052.vercel.app/'},
+      {t:`Client Setup and Foundations Exposable by MCP`,url:'https://linear.app/intent-hq/project/client-setup-and-foundations-exposable-by-mcp-3104ca2059cd'}
+    ]
+  },
+  {
+    verb:'Ingest',name:'Data Ingestions & IntentAI',full:'Data Ingestions & IntentAI',icon:'db',color:'#26b5ce',pct:52,
+    url:'https://linear.app/intent-hq/initiative/data-ingestions-and-intentai-4ce9a5603819',
+    status:'Enrichment live, quality bar proving out. Closing the gap on self-serve data and the IntentAI cognitive layer.',
+    shipped:[
+      {t:`Intent AI enrichment live in production (MTN Nigeria)`,s:`As a client, I want my raw signals enriched into behavioural insight in production, so that I can act on behaviour, not raw logs.`},
+      {t:`Brands & Topics optimisation + QA surfacing`,s:`As the data team, I want brand and topic candidates surfaced for QA, so that enrichment quality is checked before it reaches users.`},
+      {t:`Competitor-app enrichment live (Fishka)`,s:`As a marketer, I want to know which competitor apps a user has, so that I can target based on competitive presence.`},
+      {t:`IntentAI brands & topics are human-readable and safe to show users`,s:`As a user relying on IntentAI's brand & topic labels, I want them to be automatically human-readable and flagged with a primary topic, so that enrichment output can be shown directly to clients without manual curation.`}
+    ],
+    now:[
+      {t:`Let customers add their own data sources (e.g. CRM) themselves`,m:`Bash Week: S3, Amplitude, Klaviyo + open-listener connectors passing tests; Salesforce proof landed`,s:`As a data engineer connecting a customer's own data sources to IntentOne, I want to connect a source like Salesforce, Stripe or Amplitude through embedded connectors and have it auto-mapped to the data spec with honest gap analysis, so that landed, mapped, value-tested data is ready in days without a bespoke pipeline or an engineering ticket per source.`,url:'https://linear.app/intent-hq/project/let-customers-add-their-own-data-sources-eg-crm-themselves-ce16f1bb302d'},
+      {t:`Let clients add weblog data themselves to the behavioural signal set`,date:`27 Jul`,m:`past target · S3 lands; full pipeline WIP`,s:`As a telco client with weblog data, I want to connect my weblogs myself through a UI by pointing IntentOne at my S3 bucket, so that I can get my behavioural data flowing without an engineer-led, hand-wired integration.`,url:'https://linear.app/intent-hq/project/let-clients-add-weblog-data-themselves-to-the-behavioural-signal-set-b1e268bae5dd',p:'https://signal-recommender-paths.vercel.app/'},
+      {t:`Let clients stand up the Edge SDK themselves`,date:`10 Aug`,m:`Bash Week: IDE agent / MCP bridge underway`,s:`As a mobile developer integrating the Edge SDK, I want an agent that runs in my own IDE against my real source code to instrument and verify the integration, so that I can reach a verified, production-ready integration in a day with no support ticket.`,url:'https://linear.app/intent-hq/project/let-clients-stand-up-the-edge-sdk-themselves-e57bf85d6624',p:'https://signal-recommender-paths.vercel.app/'},
+      {t:`IntentAI filters to replace the legacy blocklists (NSFW & machine activity)`,date:`31 Aug`,s:`As a member of the data/ML team running Intent AI enrichment, I want NSFW and machine/adtech activity filtered out by a model-driven Step-0 classifier before LLM enrichment, so that behavioural profiles stay clean and the filter travels consistently across clients and the new API architecture.`,url:'https://linear.app/intent-hq/project/intentai-filters-to-replace-the-legacy-blocklists-nsfw-and-machine-828c06a19709'}
+    ],
+    next:[
+      {t:`IntentAI brand & topic quality holds up across every client`,date:`20 Jul`,s:`As a member of the Intent AI team responsible for retiring the legacy enrichment, I want brand and topic classification measured against held-out ground truth and gated by a defined quality bar, so that I can prove quality holds up for each client before moving them off the legacy blocklist enrichment onto IntentAI.`,url:'https://linear.app/intent-hq/project/intentai-brand-and-topic-quality-holds-up-across-every-client-ce40e18b7cdc'}
+    ],
+    later:[
+      {t:`IntentAI parses every enriched event into a behavioural token`,url:'https://linear.app/intent-hq/project/intentai-parses-every-enriched-event-into-a-behavioural-token-b74a69ccdb95'},
+      {t:`IntentAI interests & intents hold up across every client`,url:'https://linear.app/intent-hq/project/intentai-interests-and-intents-hold-up-across-every-client-4eeeb88bcd0f'},
+      {t:`Measure and report on health of data ingestions in Data Audit`,url:'https://linear.app/intent-hq/project/measure-and-report-on-health-of-data-ingestions-in-data-audit-a974a4339697'},
+      {t:`Let clients standup the WebSDK themselves`,url:'https://linear.app/intent-hq/project/let-clients-standup-the-websdk-themselves-2f8d407c232b'},
+      {t:`Data Ingestion & Enrichment Exposable by MCP`,url:'https://linear.app/intent-hq/project/data-ingestion-and-enrichment-exposable-by-mcp-8be0924ceeed'}
+    ]
+  },
+  {
+    verb:'Understand',name:'Data Stories & Insights',full:'Data Stories & Insights',icon:'bar',color:'#DC2626',pct:57,
+    url:'https://linear.app/intent-hq/initiative/data-stories-and-insights-e2532e5ad669',
+    status:'Insights shipped. Closing the gap on chat-led exploration, richer charts and exit paths.',
+    shipped:[
+      {t:`Data Story — agentic charts on real data`,s:`As a business user, I want questions answered with structured, chart-backed narratives on real data, so that I can trust the answer without building the analysis myself.`},
+      {t:`Sample size + source on every chart`,s:`As a data-savvy user, I want sample size and source on each chart, so that I can judge how much to trust it.`},
+      {t:`Semantic search in Data Audit`,s:`As a user, I want to search the Data Audit by meaning, so that I can find signals without knowing their exact names.`},
+      {t:`Copilot chat over data`,s:`As a business user, I want to interrogate my data in chat, so that I can explore and create opportunities conversationally.`},
+      {t:`Data Engine "All" overview`,s:`As a sales user, I want all charts in one overview, so that I can engage with everything available in a demo.`}
+    ],
+    now:[
+      {t:`Data engine allows users to view & easily understand all available data`,m:`✓ shipped in Bash Week`,s:`As a business user, I want to see all my available data charted in one place with clean titles, sample size, and base, so that I can engage with everything I have and judge how much to trust each chart.`,url:'https://linear.app/intent-hq/project/data-engine-allows-users-to-view-and-easily-understand-all-available-6e449dee55d6'},
+      {t:`Data audit is navigable & builds trust in underlying signal quality`,m:`✓ shipped in Bash Week`,s:`As a data-savvy user, I want to search the Data Audit table and see each signal's type and a plain-English description inline, so that I can judge how much to trust any signal without knowing its exact system name.`,url:'https://linear.app/intent-hq/project/data-audit-is-navigable-and-builds-trust-in-underlying-signal-quality-676f8ca5ea3c'}
+    ],
+    next:[
+      {t:`Chat becomes common thread for data exploration & manipulation`,date:`7 Aug`,s:`As a business user exploring my data, I want chat to run one continuous answer → explain → suggest loop across Data Engine and Data Story, so that I get the same strong response wherever I ask and never hit a dead end.`,url:'https://linear.app/intent-hq/project/chat-becomes-common-thread-for-data-exploration-and-manipulation-3578d21583cf',p:'https://intent-nine-sage.vercel.app/'},
+      {t:`Make Data Exploration leverage semantic discovery of signals`,s:`As a user exploring data, I want to find signals by describing what I mean, so that I can surface the right signals without knowing their exact names.`,url:'https://linear.app/intent-hq/project/make-data-exploration-leverage-semantic-discovery-of-signals-14e7e625ad73'},
+      {t:`Data Story shows indexed comparison and takeaway narrative`,s:`As a business user exploring my data, I want the data story to show an indexed comparison against a relevant benchmark with a plain-English takeaway, so that I know whether a number is notable without interpreting the chart myself.`,url:'https://linear.app/intent-hq/project/data-story-shows-indexed-comparison-and-takeaway-narrative-d1d97554e801'},
+      {t:`Data Engine/Stories show data in visually differentiated, engaging chart types`,s:`As a business user, I want each chart type to look visually distinct and purpose-built rather than generic, so that different kinds of data are easier to tell apart and engage with.`,url:'https://linear.app/intent-hq/project/data-enginestories-show-data-in-visually-differentiated-engaging-chart-a0db9b37461e'},
+      {t:`Exit paths: Enrichment bundles via Data Audit`,s:`As a business user, I want to set up and manage enrichment delivery to my chosen destinations myself, so that I get Intent AI's enriched output on a schedule without waiting on manual, human-coordinated handoffs.`,url:'https://linear.app/intent-hq/project/exit-paths-enrichment-bundles-via-data-audit-73580ac83cba'},
+      {t:`Exit paths: audience/opportunity export to other systems`,s:`As a business user who hasn't connected my campaign systems to IntentOne, I want to export an audience or opportunity to a destination of my choice, so that I can go target those people in my own systems without connecting anything up first.`,url:'https://linear.app/intent-hq/project/exit-paths-audienceopportunity-export-to-other-systems-15e4b0893ad9',p:'https://intent-9x.vercel.app/'},
+      {t:`Exit paths: sharing opportunities & data story insights with stakeholders`,s:`As a business user, I want to generate a shareable PPT/PDF business case straight from an opportunity, so that a non-technical stakeholder can consume the insight without ever touching the underlying charts or tables.`,url:'https://linear.app/intent-hq/project/exit-paths-sharing-opportunities-and-data-story-insights-with-b737e86bfc24'}
+    ],
+    later:[
+      {t:`Data Story surfaces inline suggestion chips that drive chat forward [WIP]`,url:'https://linear.app/intent-hq/project/data-story-surfaces-inline-suggestion-chips-that-drive-chat-forward-5051175d65c9'},
+      {t:`Insight trending / time series [WIP]`,url:'https://linear.app/intent-hq/project/insight-trending-time-series-wip-10190a51768b'},
+      {t:`Data Stories & Insights Exposable by MCP`,url:'https://linear.app/intent-hq/project/data-stories-and-insights-exposable-by-mcp-878a67f6a414'}
+    ]
+  },
+  {
+    verb:'Decide',name:'Opportunities',full:'Opportunities',icon:'bulb',color:'#D97706',pct:55,
+    url:'https://linear.app/intent-hq/initiative/opportunities-f1e50ddea25b',
+    status:'Autopilot + chat-built opportunities live. Closing the gap on editing, quality and ROI.',
+    shipped:[
+      {t:`Dynamic goal-based opportunity generation (scheduled)`,s:`As a marketer, I want opportunities generated automatically from my goals on a schedule, so that I always have a fresh, ranked stream without an analyst.`},
+      {t:`Relevance scoring replaces ROI`,s:`As a marketer, I want opportunities ranked on real relevance rather than hardcoded ROI, so that the ranking reflects my data, not guesses.`},
+      {t:`Opportunity hub with autopilot`,s:`As a campaign manager, I want a ranked hub of opportunities with rationale and creative, so that I can pick what to activate at a glance.`},
+      {t:`Goals drive opportunities at scale (600+ generated)`,s:`As the product team, I want goals to drive generation at scale across environments, so that every tenant gets opportunities automatically.`},
+      {t:`Reliably create an opportunity from scratch`,m:`✓ Done 22 Jul — shipped in Bash Week`,s:`As a campaign manager, I want to describe what I have in mind in chat and get a full, activatable opportunity back, so that I'm not stuck when autopilot has nothing relevant.`,url:'https://linear.app/intent-hq/project/reliably-create-an-opportunity-from-scratch-427b7f8a005f'},
+      {t:`Goals can change without breaking their opportunities`,m:`✓ Done 24 Jul — shipped in Bash Week`,s:`As a marketer, I want goal changes to update their opportunities predictably without over-generating, so that my hub stays trustworthy and activated campaigns keep their link to the goal that produced them.`,url:'https://linear.app/intent-hq/project/goals-can-change-without-breaking-their-opportunities-aabc169cf833'}
+    ],
+    now:[
+      {t:`Reliably edit opportunities`,m:`started in Bash Week · 27 Jul`,s:`As a campaign manager, I want to open a recommended opportunity and refine it through chat, so that I can fix an almost-right recommendation instead of discarding it or rebuilding it from scratch.`,url:'https://linear.app/intent-hq/project/reliably-edit-opportunities-148ea38a5468'}
+    ],
+    next:[
+      {t:`Allow users to provide feedback on opportunities (thumbs up, thumbs down)`,s:`As a campaign manager, I want to rate an opportunity thumbs up or down and explain my reasoning in a comment, so that the system generates more of what's useful to me and less of what isn't.`,url:'https://linear.app/intent-hq/project/allow-users-to-provide-feedback-on-opportunities-thumbs-up-thumbs-down-57059f6f2916'},
+      {t:`Surface Opportunity value to help agents and users prioritise`,s:`As a campaign manager, I want to see each opportunity's value — from a calculation I can configure — so that I can judge which to pursue and activate first.`,url:'https://linear.app/intent-hq/project/surface-opportunity-value-to-help-agents-and-users-prioritise-ae63f79fe7ba'},
+      {t:`Marketing managers understand who they target (controls & exclusions)`,s:`As a marketing manager, I want global targeting controls and exclusions across my whole client account — proposed from my data and explained — so that I can enforce who we can and can't message everywhere, and trust the logic behind it.`,url:'https://linear.app/intent-hq/project/marketing-managers-understand-who-they-target-controls-and-exclusions-261b4c90b1de'},
+      {t:`Generate acquisition opportunities for Google Ads`,s:`As a campaign manager, I want to activate an acquisition opportunity through Google Ads, so that I can reach people who aren't yet customers instead of being limited to the campaign path.`,url:'https://linear.app/intent-hq/project/generate-acquisition-opportunities-for-google-ads-00cc7403534d',p:'https://intentone-ff.vercel.app/'}
+    ],
+    later:[
+      {t:`Discern which goal each opportunity is addressing and vice versa`,url:'https://linear.app/intent-hq/project/discern-which-goal-each-opportunity-is-addressing-and-vice-versa-28b7f701be18'},
+      {t:`The opportunity hub stays clean, current and deduped`,url:'https://linear.app/intent-hq/project/the-opportunity-hub-stays-clean-current-and-deduped-68f5ae47bca0'},
+      {t:`Users can quickly find and shortlist the right opportunities`,url:'https://linear.app/intent-hq/project/users-can-quickly-find-and-shortlist-the-right-opportunities-1df041796b82'},
+      {t:`Opportunities activate as multi-step journeys across channels`,url:'https://linear.app/intent-hq/project/opportunities-activate-as-multi-step-journeys-across-channels-a8715303c7ae'},
+      {t:`Audience splits should feel relevant and clearly related`,url:'https://linear.app/intent-hq/project/audience-splits-should-feel-relevant-and-clearly-related-b4252febaf67'},
+      {t:`Opportunities Exposable by MCP`,url:'https://linear.app/intent-hq/project/opportunities-exposable-by-mcp-b3f79fc1f71c'}
+    ]
+  },
+  {
+    verb:'Activate',name:'Activation & Learning',full:'Activation & Learning',icon:'mail',color:'#059669',pct:66,
+    url:'https://linear.app/intent-hq/initiative/activation-and-learning-f9019f2c91b0',
+    status:'First live campaign shipped. Closing the gap on channels, governance, creative, martech and monitoring.',
+    shipped:[
+      {t:`First live end-to-end campaign (iOS + Android, ~1 min)`,s:`As a campaign manager, I want one click to take an opportunity to a live message on a customer's phone, so that I can activate in about a minute without leaving the product.`},
+      {t:`Full campaign build-and-send flow`,s:`As a campaign manager, I want to set audiences, channels, timing and frequency in one flow, so that I can build and send a campaign tied to its opportunity.`},
+      {t:`Automatic creative generation (~30–40s)`,s:`As a campaign manager, I want copy and a branded image generated for me, so that I don't have to create creative by hand for every opportunity.`},
+      {t:`Campaign dashboard + send-time optimisation`,s:`As a campaign manager, I want a dashboard with live statuses and best-moment timing, so that I can monitor campaigns and send at the right time.`}
+    ],
+    now:[
+      {t:`Campaigns reach customers on every channel that matters (push, SMS, RCS, WA)`,date:`31 Aug`,hi:true,m:`Bash Week: RCS backend done, WhatsApp in progress`,s:`As a campaign manager, I want to activate a campaign across push, SMS, RCS and WhatsApp, so that I can reach customers who aren't addressable by push.`,url:'https://linear.app/intent-hq/project/campaigns-reach-customers-on-every-channel-that-matters-push-sms-rcs-198fa2cc3a8a'},
+      {t:`Teams manage campaigns with clear ownership, filtering and governance`,date:`31 Aug`,hi:true,s:`As a team lead, I want every campaign to have a clear owner and to filter and govern campaigns by ownership, so that accountability for reviewing, activating, monitoring, updating, and stopping campaigns is explicit across the team.`,url:'https://linear.app/intent-hq/project/teams-manage-campaigns-with-clear-ownership-filtering-and-governance-7bcef61e3b56'},
+      {t:`Teams can measure and monitor campaign performance`,hi:true,m:`Bash Week: monitoring table & charts underway`,s:`As a campaign manager, I want to monitor the status and performance of every campaign and opportunity across channels in one place, so that I can see what is running, how it is performing, and whether it achieved the expected results.`,url:'https://linear.app/intent-hq/project/teams-can-measure-and-monitor-campaign-performance-0f59931dbd51',p:'https://v0-onboarding-with-connectors-post-setup.vercel.app/workspace'}
+    ],
+    next:[
+      {t:`Channel-specific creative generation (view and edit)`,s:`As a campaign manager, I want channel-appropriate creative generated for each channel that I can review and edit before activation, so that every channel gets a fitting message I control rather than a fixed one I can't change.`,url:'https://linear.app/intent-hq/project/channel-specific-creative-generation-view-and-edit-ffb877c58ccc'},
+      {t:`IntentOne matches the capabilities of Edge Console (ctrl grp, silent, moments)`,s:`As a campaign manager, I want to create, deploy, monitor and migrate advanced Edge Console campaign types (silent campaigns, control groups, partial deployment, custom micro-moments) directly in IntentOne, so that I can run all my activation use cases in one product without switching to Edge Console.`,url:'https://linear.app/intent-hq/project/intentone-matches-the-capabilities-of-edge-console-ctrl-grp-silent-37294f327303'}
+    ],
+    later:[
+      {t:`Users can save a campaign and finish it later (drafts)`,date:`Oct`,url:'https://linear.app/intent-hq/project/users-can-save-a-campaign-and-finish-it-later-drafts-cc23002359b2'},
+      {t:`Teams activate in the tools they already run on (Adobe, Salesforce first)`,date:`Nov`,url:'https://linear.app/intent-hq/project/teams-activate-in-the-tools-they-already-run-on-adobe-salesforce-first-309ede9f706b'},
+      {t:`Best Channel To Engage`,url:'https://linear.app/intent-hq/project/best-channel-to-engage-29fe740e07a5'},
+      {t:`Activation Exposable by MCP`,url:'https://linear.app/intent-hq/project/activation-exposable-by-mcp-aa2fcede43a1'}
+    ]
+  }
+];
+
+const CIRC = 2*Math.PI*36;
+
+function ring(p){
+  return '<div class="ring"><svg viewBox="0 0 80 80">'+
+    '<circle class="track" cx="40" cy="40" r="36" style="stroke:'+p.color+';opacity:.9"/>'+
+    '</svg>'+
+    '<div class="ctr"><svg viewBox="0 0 24 24" style="width:30px;height:30px;stroke:'+p.color+';fill:none;stroke-width:1.9">'+ICONS[p.icon]+'</svg></div></div>';
+}
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function card(x,cls){
+  const meta=[];
+  if(x.date) meta.push('<span class="date">Target '+esc(x.date)+'</span>');
+  if(x.m) meta.push('<span>'+esc(x.m)+'</span>');
+  const hi = x.hi ? '<span class="kd hi">High</span>' : '';
+  const cm = (meta.length||hi) ? '<div class="cm">'+hi+meta.join('')+'</div>' : '';
+  const cs = x.s ? '<div class="cs"><b>User story</b>'+esc(x.s)+'</div>' : '';
+  if(x.p){
+    const lk='<div class="clinks">'+(x.url?'<a href="'+x.url+'" target="_blank" rel="noopener">Linear ↗</a>':'')+'<a class="proto" href="'+x.p+'" target="_blank" rel="noopener">Prototype ↗</a></div>';
+    return '<div class="card '+cls+'"><div class="ct">'+esc(x.t)+'</div>'+cs+cm+lk+'</div>';
+  }
+  const tag = x.url ? 'a href="'+x.url+'" target="_blank" rel="noopener"' : 'div';
+  const close = x.url ? 'a':'div';
+  return '<'+tag+' class="card '+cls+'"><div class="ct">'+esc(x.t)+'</div>'+cs+cm+'</'+close+'>';
+}
+
+function col(cls,label,items){
+  const body = (items&&items.length) ? items.map(x=>card(x,cls)).join('') : '<div class="col-empty">—</div>';
+  const ct = (items&&items.length) ? '<span class="ct">'+items.length+'</span>' : '';
+  return '<div class="col '+cls+'"><div class="colhd"><span class="dot"></span>'+label+ct+'</div>'+body+'</div>';
+}
+
+function detail(p,i){
+  const infra = p.infraNote ? '<div class="infra-note">'+p.infraNote+'</div>' : '';
+  const board = '<div class="board">'+
+    col('ship','Shipped',p.shipped)+
+    col('now','Bash Week',p.now)+
+    col('next','Next · after Bash Week',p.next)+
+    '<div class="mstone"><span class="flagi"><svg viewBox="0 0 24 24">'+ICONS.flag+'</svg></span><span class="lbl">End-to-end complete</span></div>'+
+    col('later','Later',p.later)+
+  '</div>';
+  return '<div class="detail" id="d'+i+'">'+
+      '<div class="dhead">'+
+        '<div class="dtile" style="background:'+p.color+'"><svg viewBox="0 0 24 24">'+ICONS[p.icon]+'</svg></div>'+
+        '<div class="dtitle"><h2><a href="'+p.url+'" target="_blank" rel="noopener">'+esc(p.full)+'</a>'+
+          '<a class="plink" href="'+p.url+'" target="_blank" rel="noopener">Linear ↗</a></h2>'+
+          '<p class="dstatus">'+esc(p.status)+'</p></div>'+
+        
+      '</div>'+ infra + board +
+    '</div>';
+}
+
+const pipe=document.getElementById('pipeline');
+pipe.innerHTML = P.map((p,i)=>(
+  '<button class="node" data-i="'+i+'">'+ring(p)+
+    '<div class="verb">'+esc(p.verb)+'</div>'+
+    '<div class="nname">'+esc(p.name)+'</div>'+
+    '<p class="nstatus">'+esc(p.status)+'</p>'+
+    '<div class="caret"></div></button>'
+)).join('');
+
+document.getElementById('details').innerHTML = P.map((p,i)=>detail(p,i)).join('');
+
+let openIdx=null;
+function select(i){
+  const nodes=[...document.querySelectorAll('.node')];
+  const dets=[...document.querySelectorAll('.detail')];
+  if(openIdx===i){ nodes[i].classList.remove('active'); dets[i].classList.remove('open'); openIdx=null; return; }
+  nodes.forEach(n=>n.classList.remove('active')); dets.forEach(d=>d.classList.remove('open'));
+  nodes[i].classList.add('active'); dets[i].classList.add('open'); openIdx=i;
+  dets[i].scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+document.querySelectorAll('.node').forEach(n=> n.addEventListener('click',()=>select(+n.dataset.i)));
+
+window.addEventListener('load',()=>{
+  document.querySelectorAll('.ring .prog').forEach(c=>{ const v=c.getAttribute('stroke-dashoffset'); c.style.strokeDashoffset=CIRC; requestAnimationFrame(()=>{ setTimeout(()=>{c.style.strokeDashoffset=v;},60); }); });
+});
+
+// ---- hub routing ----
+const tabBtns=[...document.querySelectorAll('.tab')];
+function showView(v){
+  ['home','build','deliver'].forEach(k=>{const el=document.getElementById('view-'+k);if(el)el.classList.toggle('on',k===v);});
+  document.getElementById('tabsrow').style.display = (v==='home') ? 'none' : 'flex';
+  tabBtns.forEach(t=>t.classList.toggle('active',t.dataset.view===v));
+  window.scrollTo(0,0);
+}
+function go(v){showView(v);history.replaceState(null,'',v==='home'?'#':'#'+v);}
+tabBtns.forEach(t=>t.addEventListener('click',()=>go(t.dataset.view)));
+document.querySelectorAll('.mode').forEach(m=>m.addEventListener('click',()=>go(m.dataset.view)));
+document.querySelectorAll('.chip.auto[data-pillar]').forEach(c=>c.addEventListener('click',()=>{
+  go('build');
+  const i=+c.dataset.pillar;
+  if(openIdx!==i)select(i);
+  document.getElementById('pipeline').scrollIntoView({behavior:'smooth'});
+}));
+if(location.hash==='#deliver')showView('deliver');
+else if(location.hash==='#build')showView('build');
+else showView('home');
+
+// ---- interactive delivery questions ----
+document.querySelectorAll('.q').forEach(qEl=>{
+  const opts=[...qEl.querySelectorAll(':scope > .qopts > .qopt')];
+  const ans=[...qEl.querySelectorAll(':scope > .qa')];
+  const multi=qEl.classList.contains('multi');
+  opts.forEach((o,i)=>o.addEventListener('click',()=>{
+    if(multi){
+      o.classList.toggle('on');
+      if(ans[i])ans[i].classList.toggle('on',o.classList.contains('on'));
+    }else{
+      const already=o.classList.contains('on');
+      opts.forEach((x,j)=>x.classList.toggle('on',!already&&j===i));
+      ans.forEach((a,j)=>a.classList.toggle('on',!already&&j===i));
+    }
+  }));
+});
+
+// ---- sector-aware goal types (from Our Pillars, Coda) ----
+const GOALKEYS=['acquire','uplift','retain','enrich'];
+const SECTORS={
+'Generic':{
+ acquire:`<b>New customers.</b> Goals set in-product drive acquisition opportunities — including Google Ads audiences. <a class="wlink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Prioritised-Wedges-Enterprise_suuH52jk" target="_blank" rel="noopener">View wedge ↗</a>`,
+ uplift:`<b>More from existing customers.</b> Goals target upsell and cross-sell moments. <a class="wlink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Prioritised-Wedges-Enterprise_suuH52jk" target="_blank" rel="noopener">View wedge ↗</a>`,
+ retain:`<b>Stop customers leaving.</b> Goals target churn risk and win-back. <a class="wlink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Prioritised-Wedges-Enterprise_suuH52jk" target="_blank" rel="noopener">View wedge ↗</a>`,
+ enrich:`<b>Better data enablement</b> for the client's internal use — IntentAI enrichment delivered into their stack. <a class="wlink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Prioritised-Wedges-Enterprise_suuH52jk" target="_blank" rel="noopener">View wedge ↗</a>`},
+'Telco':{
+ acquire:`<b>Acquisition audiences from behavioural depth</b>, not demographic lookalikes — exported into the paid channels where spend already lives. <span class="wlink up">Wedge up · not written yet</span>`,
+ uplift:`<b>ARPU growth.</b> Read the moment a subscriber is ready for the next product — cross-sell, upsell and primariedad windows of 5–14 days. The AIS / Telkomsel / VOXI / Giffgaff wedge. <a class="wlink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Prioritised-Wedges-Enterprise_suuH52jk" target="_blank" rel="noopener">View wedge ↗</a>`,
+ retain:`<b>Churn defence.</b> Detect decay before the decision — competitor app installs, routine breaks, engagement decay — and intervene without discount erosion. The VOXI / iD Mobile / Digi wedge. <a class="wlink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Prioritised-Wedges-Enterprise_suuH52jk" target="_blank" rel="noopener">View wedge ↗</a>`,
+ enrich:`<b>Complete the subscriber record</b> — behavioural signals delivered into the client's own stack for scoring and analytics. <span class="wlink up">Wedge up · not written yet</span>`},
+'Finance':{
+ acquire:`<b>Growth hacking &amp; registration → active usage.</b> Acquisition audiences from deep behavioural profiles; activate dormant sign-ups. The Kroo / Zopa / Imagin / Banco Macro wedge. <a class="wlink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Prioritised-Wedges-Enterprise_suuH52jk" target="_blank" rel="noopener">View wedge ↗</a>`,
+ uplift:`<b>Primariedad &amp; cross-sell.</b> Salary-deposit and competitor-app moments signal when a customer is ready to deepen. The BBVA / Imagin / TBC Bank wedge. <a class="wlink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Prioritised-Wedges-Enterprise_suuH52jk" target="_blank" rel="noopener">View wedge ↗</a>`,
+ retain:`<b>Renewal-window &amp; decay defence.</b> Decay signatures ahead of renewal or churn, intervention matched to the signal. The LV= / Saga / Pacifico wedge. <a class="wlink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Prioritised-Wedges-Enterprise_suuH52jk" target="_blank" rel="noopener">View wedge ↗</a>`,
+ enrich:`<b>Alt-data scoring &amp; enrichment.</b> Thin-file underwriting, Consumer Duty affordability, approval-rate uplift at constant default. The Mibanco / Nationwide / Zego wedge. <a class="wlink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Prioritised-Wedges-Enterprise_suuH52jk" target="_blank" rel="noopener">View wedge ↗</a>`},
+'Retail':{
+ acquire:`<b>Acquisition audiences</b> built from what high-value members actually do — exported to paid channels. <span class="wlink up">Wedge up · not written yet</span>`,
+ uplift:`<b>Loyalty app activation.</b> Moments of need drive redemption and attach. The Fishka / Dotz / CPFL / Korzinka wedge. <a class="wlink" href="https://docs.superhuman.com/d/IntentOne_dHve5KY1Qpj/Prioritised-Wedges-Enterprise_suuH52jk" target="_blank" rel="noopener">View wedge ↗</a>`,
+ retain:`<b>Lapse defence.</b> Visit-decay and competitor signals catch members before they quietly leave. <span class="wlink up">Wedge up · not written yet</span>`,
+ enrich:`<b>CLV on thin loyalty bases.</b> Behavioural features sharpen decile separation for the client's own CLV models. <span class="wlink up">Wedge up · not written yet</span>`}
+};
+function applySector(name){
+  const data=SECTORS[name]||SECTORS['Generic'];
+  document.querySelectorAll('.q-goals').forEach(q=>{
+    [...q.querySelectorAll(':scope > .qa')].forEach((a,i)=>{a.innerHTML='<div class="exg">Example goal</div><p>'+data[GOALKEYS[i]]+'</p>';});
+  });
+}
+let dealLock=false;
+document.querySelectorAll('.sopt').forEach(b=>{if(b.textContent.trim()==='Telco')b.classList.add('on');});
+applySector('Telco');
+document.querySelectorAll('.sopt').forEach(b=>b.addEventListener('click',()=>{
+  if(dealLock)return;
+  const on=!b.classList.contains('on');
+  document.querySelectorAll('.sopt').forEach(x=>x.classList.remove('on'));
+  if(on)b.classList.add('on');
+  applySector(on?b.textContent.replace(/\s+/g,' ').trim():'Generic');
+}));
+function setSector(name,lock){
+  dealLock=!!lock;
+  document.querySelectorAll('.sopt').forEach(x=>{
+    const me=x.textContent.trim()===name;
+    x.classList.toggle('on',me);
+    x.classList.toggle('locked',!!lock&&!me);
+  });
+  applySector(name);
+}
+
+// ---- Lightfield deal snapshot (30 Jul 2026) ----
+// rows: 0=header 1=infra 2=goals 3=ingest 4=activate 5=support
+const DEALS=[
+ {n:'TravelClub — Edge',acct:'Travelclub (Spain)',sector:'Retail',sku:0,stage:'Discovery',valS:'$165K',maus:'3M MAUs',dep:'Blue Box',reg:'Europe',
+  a:{infra:1,res:[0],goal:1,camp:1,sys:[4],val:[1]},
+  notes:[
+   [1,"GDPR-heavy: they probed whether data ever leaves their environment; pricing predictability is a top objection."],
+   [3,"<b>Customer data: GCP BigQuery</b> (platform mid-migration) — no NX1 BigQuery connector, so bidirectional BigQuery integration or S3 files. Pilot is CRM-only; SDK deferred pending GDPR review (~0.5M app members)."],
+   [4,"<b>In-house campaign manager with no inbound API</b> — they custom-build the entry path; segments and SQL export in, campaign results back for agent learning."],
+   [5,"Wants IntentOne as a <b>co-pilot for their CRM team</b>, not a replacement — transparency and editability of AI segments is mandatory."]],
+  ctx:'45-day free pilot + annual licence (€150–250K) proposed 29 Jul, under internal review.',
+  url:'https://crm.lightfield.app/crm/account/cmke7kzwo06jv5dn0p8jwj3bb/opportunity/cml13guia0slf5en1uyrng3dw'},
+ {n:'Vivo — Edge',acct:'Vivo · Telefónica Brasil',sector:'Telco',sku:0,stage:'Proposal',valS:'$750K',maus:'30M MAUs',dep:'Red Box',reg:'LATAM',
+  a:{infra:0,res:[3],goal:1,camp:1,sys:[1],val:[1]},
+  notes:[
+   [1,"Red Box drivers: <b>LGPD</b> and data flowing into the <b>Vivo data lake</b>; cloud provider not yet stated."],
+   [3,"Stack: <b>Amdocs</b> (B2C), Salesforce CPQ + ServiceNow (B2B), Oracle billing — pipelines land in the Vivo data lake, deliberately avoiding third-party CRM tools. Phase 0 = Android SDK in My Vivo; Vivo runs its <b>own in-house SDK</b>, so differentiation is the bar."],
+   [4,"B2C martech <b>migrating to Adobe</b>; Phase 0 activates via SDK push."],
+   [5,"Flávia's CVM team owns campaigns — Intent feeds their NBO and churn models."]],
+  ctx:'60-day Android PoC at no commercial cost, pending legal; SDK key issued after SOW signature.',
+  url:'https://crm.lightfield.app/crm/account/cmkymivb80d145fprk08qxwmt/opportunity/cml13iy390vir5en1fafngxxk'},
+ {n:'Mashreq Bank',acct:'Mashreq (UAE)',sector:'Finance',sku:0,stage:'Discovery',valS:'$1M',maus:'MAUs —',dep:'Red Box',reg:'MENA',
+  a:{infra:0,goal:1},
+  notes:[
+   [2,"Positioning: a <b>complementary intelligence layer</b> over existing AI and data investments — explicitly no new transformation programme."],
+   [3,"Stack <b>undiscovered</b> — the technical workshop (architecture, deployment, integration) is the next step; that is why this path is left open."]],
+  ctx:'Awaiting internal response before scheduling the technical workshop.',
+  url:'https://crm.lightfield.app/crm/account/cmkntomjs04t35emmj2tto8ce/opportunity/cmojp09ai0er2nqof9fngcbqe'},
+ {n:'Charter — Spectrum Lift',acct:'Charter Communications',sector:'Telco',sku:1,stage:'Qualification',valS:'$500K',maus:'15M MAUs',dep:'TBC',reg:'NAM',
+  a:{goal:2,crm:1,weblog:2},
+  notes:[
+   [1,"Deployment unset; hard requirement: <b>privacy-safe, pseudonymous IDs</b>. Mutual NDA with Charter Legal since 18 May."],
+   [2,"Two tracks: churn-model enrichment + first-party audience building for Spectrum Reach."],
+   [3,"<b>Databricks + Snowflake</b>; agreed connection is <b>Delta Sharing</b> — answered below as the Databricks path. Weblog-class behavioural data (DNS, IPDR, Cujo) is the heart of the deal."]],
+  ctx:'Databricks SE lined up on Delta Sharing capabilities; pilot follow-up in progress.',
+  url:'https://crm.lightfield.app/crm/account/cmkyvi2gw0bny5dob182dfvi4/opportunity/cml1401ru1jwe5en1rr0i9ihl'},
+ {n:'Parimatch — Ginja Casino',acct:'Parimatch (Portugal)',sector:'Other',sku:0,stage:'Contracts',valS:'$150K',maus:'50K MAUs',dep:'Blue Box · AWS EU',reg:'Europe',
+  a:{infra:1,res:[0],goal:2,camp:0,val:[0]},
+  notes:[
+   [1,"Standard <b>blue box on AWS EU</b> agreed ('blue box' stays off client-facing paperwork)."],
+   [3,"<b>CRM: Fast Track</b> (gaming) — no NX1 connector. Agreed path: <b>S3 ingestion from month 4</b>; Phase 1 is SDK-only with a custom hash ID for later CRM matching. Android APK app (off-Play-Store, supported); iOS out of Phase 1. Cursor/AI-dev question asked — answer not yet recorded."],
+   [4,"<b>No marketing engagement tool</b> — activation is IntentOne push via their Firebase."],
+   [5,"No campaign managers of their own — <b>autopilot</b> is the support model; delivery plan runs on the Vivo baseline."]],
+  ctx:'Order Form sent 24 Jul, awaiting signature; SDK/API keys blocked on it.',
+  url:'https://crm.lightfield.app/crm/account/cmkyv31uw058m5dobeaa7jxzn/opportunity/cmpnp2wlq008do3ob1elk0g58'},
+ {n:'Telkom Indonesia — White Label',acct:'Telkom Group',sector:'Telco',sku:1,stage:'Discovery',valS:'value TBC',maus:'MAUs —',dep:'Red Box',reg:'APAC',
+  a:{infra:0,goal:3},
+  notes:[
+   [2,"White-label: resellable behavioural-intelligence use cases for Telkom's enterprise clients (banks first), alongside their <b>Big Box AI</b> unit."],
+   [3,"End-client stacks unknown — commercial stage only, so the technical path deliberately stays open."]],
+  ctx:'Next: intro to the Big Box team; Telkom to share priority financial institutions.',
+  url:'https://crm.lightfield.app/crm/account/cmkyq6cmv06hz5dpnnh6s9t8m/opportunity/cmpcp88h201f2o4lfheo352qn'},
+ {n:'Mobileum — Solari Mobile',acct:'Mobileum (partner)',sector:'Telco',sku:1,stage:'Demo motion',valS:'no open opp',maus:'MAUs —',dep:'Blue Box demo',reg:'—',
+  a:{infra:1,weblog:0,goal:1},
+  notes:[
+   [3,"<b>Weblog-only play</b>: first target of self-serve weblog connect — pointing IntentOne at an <b>S3 bucket</b>. Runs on the rebuilt <b>Solari Mobile</b> demo workspace (the old workspace was scrapped for weak goals)."]],
+  ctx:'Partner account — no open opportunity in Lightfield; demo-workspace motion. Last interaction 29 Jul.',
+  url:'https://crm.lightfield.app/crm/account/cmkyy0jq606w55dppbee89bwd'}
+];
+function qsByText(t){return [...document.querySelectorAll('#view-deliver .q')].filter(q=>{const h=q.querySelector(':scope > .qq');return h&&h.textContent.trim().indexOf(t)===0;});}
+function setSingle(qEl,idx){
+  const o=[...qEl.querySelectorAll(':scope > .qopts > .qopt')];
+  const a=[...qEl.querySelectorAll(':scope > .qa')];
+  o.forEach((x,j)=>x.classList.toggle('on',j===idx));
+  a.forEach((x,j)=>x.classList.toggle('on',j===idx));
+}
+function ans(t,idx){if(idx===undefined||idx===null)return;qsByText(t).forEach(q=>setSingle(q,idx));}
+function ansMulti(t,idxs){if(!idxs)return;qsByText(t).forEach(q=>{
+  const o=[...q.querySelectorAll(':scope > .qopts > .qopt')];
+  const a=[...q.querySelectorAll(':scope > .qa')];
+  o.forEach((x,j)=>{const on=idxs.includes(j);x.classList.toggle('on',on);if(a[j])a[j].classList.toggle('on',on);});
+});}
+function clearAnswers(){[...document.querySelectorAll('#view-deliver .q')].forEach(q=>{
+  [...q.querySelectorAll(':scope > .qopts > .qopt')].forEach(x=>x.classList.remove('on'));
+  [...q.querySelectorAll(':scope > .qa')].forEach(x=>x.classList.remove('on'));
+});}
+// tag matrix cells with column index (3 per row, row-major)
+const MC=[...document.querySelectorAll('.m2 > .mc')];
+MC.forEach((c,i)=>c.dataset.col=i%3);
+document.getElementById('dealsel').addEventListener('change',e=>{
+  const v=e.target.value;
+  const ctx=document.getElementById('dealctx');
+  document.querySelectorAll('.mc.top').forEach(t=>t.classList.remove('hot'));
+  document.querySelectorAll('.dealnote').forEach(n=>n.remove());
+  MC.forEach(c=>c.classList.remove('offcol'));
+  clearAnswers();
+  if(v===''){setSector('Telco',false);ctx.hidden=true;return;}
+  const d=DEALS[+v];
+  setSector(d.sector,true);
+  const A=d.a||{};
+  ans('Where must the application',A.infra);
+  ans('Their cloud, or on-prem?',A.cp);
+  ans('Which cloud?',A.cloud);
+  ans('How will our engineers access',A.acc);
+  ansMulti('Data residency',A.res);
+  ans('What goals are the client',A.goal);
+  ans("Do the client's mobile developers",A.sdkAI);
+  ans('How will weblog data arrive?',A.weblog);
+  ans("Where does the client's CRM data live",A.crm);
+  ans('Which campaign management system',A.camp);
+  ansMulti('Which system?',A.sys);
+  ansMulti('How will the client create value',A.val);
+  // hide the other SKU columns in place
+  MC.forEach(c=>{if(+c.dataset.col!==d.sku)c.classList.add('offcol');});
+  const tops=MC.filter(c=>c.classList.contains('top'));
+  if(tops[d.sku])tops[d.sku].classList.add('hot');
+  // embed CRM facts into the visible column's rows
+  (d.notes||[]).forEach(([row,html])=>{
+    const cell=MC[row*3+d.sku];
+    if(cell){const n=document.createElement('div');n.className='dealnote';n.innerHTML='<span class="dl">From Lightfield</span>'+html;cell.appendChild(n);}
+  });
+  ctx.hidden=false;
+  ctx.innerHTML='<b>'+d.n+'</b> · '+d.acct+' — '+d.stage+' · '+d.valS+' · '+d.maus+' · '+d.dep+' · '+d.reg+
+    '<p>'+d.ctx+'</p>'+
+    '<a href="'+d.url+'" target="_blank" rel="noopener">Open in Lightfield ↗</a> <span class="sector-h">facts embedded in the path below · unanswered = not in the record · snapshot 30 Jul</span>';
+});
+</script>
+</body>
+</html>
