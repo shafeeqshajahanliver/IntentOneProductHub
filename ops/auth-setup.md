@@ -1,5 +1,10 @@
 # Turning on sign-in for the hub: step by step
 
+> **Status: the gate is currently OFF.** The hub is open to anyone with the link. The gate
+> code is parked at `ops/auth-middleware.js.off`. To switch it back on, rename that file to
+> `middleware.js` at the repo root and push, once the three variables in step 9 are set.
+> Do the Vercel side first, otherwise the hub goes down for everyone.
+
 Two parts. Part A is in Google, part B is in Vercel. About ten minutes in total.
 Sign in to everything with your `@intenthq.com` account.
 
@@ -72,7 +77,12 @@ boxes (Production, Preview, Development), then **Save**.
 
 That is all three. Nothing else is needed.
 
-**10.** Tell Claude **"push to production"**. The gate goes live about a minute later.
+**10.** Tell Claude **"push to production"**. Claude renames `ops/auth-middleware.js.off`
+back to `middleware.js` and pushes. The gate goes live about a minute later.
+
+If you are doing it yourself in the Vercel dashboard, redeploy with **"Use existing Build
+Cache" unticked**. Environment variables are baked in at build time, so a cached redeploy
+ignores anything you just added.
 
 ---
 
