@@ -127,15 +127,18 @@ the report that the push could not be made.
 
 ---
 
-## 5. Report
+## 5. Report to Slack
 
-Short. Shaf is VP Product and reads this on a Monday morning. Cover:
+This is the primary delivery, not an extra. Send Shaf a direct message with
+`mcp__Slack__slack_send_message` to user `U09JWELV5PY`. Send it, do not leave a draft.
+
+Short enough to read on a phone. Cover:
 
 - How many deals changed and what the new headline coverage is, versus last week.
 - Any deal that moved from zero answers to some answers, named.
 - Any data quality problem worth a human fixing in Lightfield: opportunities named after
   products rather than clients, duplicate records, wrong country, notes linked to the wrong
   deal, high-value deals with no notes at all.
-- Nothing else. No recap of the process.
+- Nothing else. No recap of the process. If nothing changed, one line saying so.
 
 Write "IntentOne" as one word. No em dashes.
