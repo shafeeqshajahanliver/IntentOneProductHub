@@ -120,6 +120,16 @@ Vercel deploys automatically from `main`. Confirm with:
 curl -s -o /dev/null -w "%{http_code}" https://intentonepathtovalue1.vercel.app
 ```
 
+**Expect `302`, not `200`.** The hub sits behind Google sign-in for `@intenthq.com`
+accounts (see `ops/auth-setup.md`), so an anonymous request is redirected to Google. A
+`302` means the site is up and the gate is working. A `200` means the gate is off. A `503`
+means the Google credentials are missing from the Vercel project settings, and the hub is
+unreachable for everyone until they are added, so say so in the report.
+
+If the job has been given an `AUTOMATION_KEY` value, it can check the deployed content
+instead by adding `-H "x-automation-key: <value>"` to the curl. Without that value, verify
+the push succeeded and stop there. Do not try to work around the gate.
+
 **Push credential:** the remote needs a GitHub token. If the clone URL has no credential and
 `git push` fails with authentication, stop. Do not attempt workarounds. Write the updated
 `index.html` to the project doc `claude/intentone-product-hub.html` instead and say clearly in

@@ -1,0 +1,8 @@
+{
+  "name": "intentone-product-hub",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@vercel/functions": "^3.7.6"
+  }
+}
