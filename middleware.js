@@ -139,10 +139,16 @@ export default async function middleware(request) {
   const authSecret = process.env.AUTH_SECRET;
 
   if (!clientId || !clientSecret || !authSecret) {
+    // Name the missing keys so a misspelled or Preview-only variable is obvious.
+    // Values are never shown, only whether each key arrived.
+    const missing = [];
+    if (!clientId) missing.push('GOOGLE_CLIENT_ID');
+    if (!clientSecret) missing.push('GOOGLE_CLIENT_SECRET');
+    if (!authSecret) missing.push('AUTH_SECRET');
     return page(
       503,
       'Sign-in is not set up yet',
-      'This hub is waiting on its Google credentials. Add GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET and AUTH_SECRET to the Vercel project settings and redeploy.'
+      `Vercel is not passing ${missing.join(', ')} to this deployment. Check the spelling in the project settings, make sure the Production box is ticked, then redeploy without the build cache.`
     );
   }
 
