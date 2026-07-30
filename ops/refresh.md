@@ -120,14 +120,17 @@ Vercel deploys automatically from `main`. Confirm with:
 curl -s -o /dev/null -w "%{http_code}" https://intentonepathtovalue1.vercel.app
 ```
 
-**Expect `200`.** The hub is currently open to anyone with the link. The Google sign-in
-gate is built but switched off, parked at `ops/auth-middleware.js.off` (see
-`ops/auth-setup.md`).
+**Expect `302`, not `200`.** The hub sits behind Google sign-in for `@intenthq.com`
+accounts (see `ops/auth-setup.md`), so an anonymous request is redirected to Google. A
+`302` to `/_auth/login` means the site is up and the gate is working.
 
-If someone has since turned the gate back on, this call returns `302` instead, which is
-also healthy. A `503` means the gate is on but its Google credentials are missing from the
-Vercel project settings, so the hub is down for everyone. Say so in the report and do not
-try to work around it.
+A `200` means the gate has been switched off. A `503` means the gate is on but a Google
+credential is missing from the Vercel project settings, so the hub is down for everyone.
+The 503 page names the missing variable. Report it and do not try to work around it.
+
+If the job has been given an `AUTOMATION_KEY` value, it can check the deployed content
+instead by adding `-H "x-automation-key: <value>"` to the curl. Without that value, verify
+the push succeeded and stop there.
 
 **Push credential:** the remote needs a GitHub token. If the clone URL has no credential and
 `git push` fails with authentication, stop. Do not attempt workarounds. Write the updated

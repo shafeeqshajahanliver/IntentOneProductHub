@@ -1,9 +1,15 @@
 # Turning on sign-in for the hub: step by step
 
-> **Status: the gate is currently OFF.** The hub is open to anyone with the link. The gate
-> code is parked at `ops/auth-middleware.js.off`. To switch it back on, rename that file to
-> `middleware.js` at the repo root and push, once the three variables in step 9 are set.
-> Do the Vercel side first, otherwise the hub goes down for everyone.
+> **Status: the gate is ON.** Live since 30 July 2026. The hub redirects anonymous visitors
+> to Google and only `@intenthq.com` accounts get in.
+>
+> To switch it off, rename `middleware.js` to `ops/auth-middleware.js.off` and push. To
+> switch it back on, rename it back. The hub returns to normal within about a minute either
+> way, and `index.html` is never involved.
+>
+> **The one thing that goes wrong:** variable names. The keys must match exactly. A
+> variable named `GOOGLE_CLIENT_SEC` instead of `GOOGLE_CLIENT_SECRET` took the hub down
+> three times before it was spotted. The 503 page now names whichever key is missing.
 
 Two parts. Part A is in Google, part B is in Vercel. About ten minutes in total.
 Sign in to everything with your `@intenthq.com` account.
