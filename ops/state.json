@@ -1,0 +1,707 @@
+{
+ "version": 1,
+ "lastRun": "2026-07-30",
+ "note": "Per-deal Lightfield extraction state. nc = note count at last extraction, cov = answers held, dry = consecutive runs that found notes but no answers.",
+ "deals": [
+  {
+   "idx": 0,
+   "oppId": "opp_cmm21t0bn0ed2lho5510ac5ke",
+   "name": "BT/EE Edge SDK Licence",
+   "stage": "Contracts",
+   "nc": null,
+   "cov": 2,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 1,
+   "oppId": "opp_cml14bjiy1z3b5en1en2h6xlf",
+   "name": "FlexyPro",
+   "stage": "Contracts",
+   "nc": null,
+   "cov": 1,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 2,
+   "oppId": "opp_cmpnp2wlq008do3ob1elk0g58",
+   "name": "Parimatch · Ginja Casino",
+   "stage": "Contracts",
+   "nc": null,
+   "cov": 8,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 3,
+   "oppId": "opp_cmmnggcac05zhjjoigdmt6i28",
+   "name": "AIS Lift & Edge",
+   "stage": "Proposal",
+   "nc": null,
+   "cov": 3,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 4,
+   "oppId": "opp_cmhz5jmgp00cl6ho828ak6seu",
+   "name": "Du Digital Advertising",
+   "stage": "Proposal",
+   "nc": null,
+   "cov": 3,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 5,
+   "oppId": "opp_cmo1llc7404uxo1o1717m5swk",
+   "name": "MTN Uganda CVM and Data Monetisation",
+   "stage": "Proposal",
+   "nc": null,
+   "cov": 5,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 6,
+   "oppId": "opp_cml13iy390vir5en1fafngxxk",
+   "name": "Vivo · Edge",
+   "stage": "Proposal",
+   "nc": null,
+   "cov": 6,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 7,
+   "oppId": "opp_cmm2azm7c042tlgpn6jfehvby",
+   "name": "XL Smart segmentation",
+   "stage": "Proposal",
+   "nc": null,
+   "cov": 2,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 8,
+   "oppId": "opp_cmned4n81051cnwlh0nq4cs9a",
+   "name": "Alif",
+   "stage": "Proposal",
+   "nc": 7,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 9,
+   "oppId": "opp_cmned4nb1051dnwlh4j3kfv7b",
+   "name": "Anor bank",
+   "stage": "Proposal",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 10,
+   "oppId": "opp_cmned4nde051enwlhazrihbvf",
+   "name": "APEX Bank / APEX Insurance",
+   "stage": "Proposal",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 11,
+   "oppId": "opp_cmned4ng6051gnwlh1p1n15pu",
+   "name": "Asia Alliance Bank",
+   "stage": "Proposal",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 12,
+   "oppId": "opp_cml13himr0tj05en1ynk47kxw",
+   "name": "BitKub",
+   "stage": "Proposal",
+   "nc": null,
+   "cov": 0,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 13,
+   "oppId": "opp_cml3s4j8500336io5b77lbtt9",
+   "name": "CBL contract extension",
+   "stage": "Proposal",
+   "nc": 6,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 14,
+   "oppId": "opp_cmnn19fjq0gxknypph9z73t8i",
+   "name": "Banco Macro_Edge",
+   "stage": "Validation",
+   "nc": null,
+   "cov": 5,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 15,
+   "oppId": "opp_cml14cxzk204m5en16v3lm21d",
+   "name": "Globe Telecom",
+   "stage": "Validation",
+   "nc": null,
+   "cov": 4,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 16,
+   "oppId": "opp_cml13jkca0wfv5en1gayhh59h",
+   "name": "Grab - Edge Pro",
+   "stage": "Validation",
+   "nc": null,
+   "cov": 3,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 17,
+   "oppId": "opp_cml13kdxe0xn05en167p9slfq",
+   "name": "Nykaa",
+   "stage": "Validation",
+   "nc": null,
+   "cov": 2,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 18,
+   "oppId": "opp_cml148yv71wrk5en1vrg4ftc8",
+   "name": "PLDT / Smart",
+   "stage": "Validation",
+   "nc": null,
+   "cov": 4,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 19,
+   "oppId": "opp_cml13kj620xvh5en19r2bogsa",
+   "name": "YPF_edge",
+   "stage": "Validation",
+   "nc": null,
+   "cov": 4,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 20,
+   "oppId": "opp_cml3qlnfe00416io7odlja96r",
+   "name": "Barclays Edge",
+   "stage": "Validation",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 21,
+   "oppId": "opp_cml13j1b40vn75en13nwlpo8z",
+   "name": "Melon Mobile",
+   "stage": "Validation",
+   "nc": 1,
+   "cov": 1,
+   "why": "notes are about commercials only",
+   "dry": 0
+  },
+  {
+   "idx": 22,
+   "oppId": "opp_cmnn2pchb0ihanzo3bs5d3a7o",
+   "name": "Mibanco_edge",
+   "stage": "Validation",
+   "nc": 7,
+   "cov": 1,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 23,
+   "oppId": "opp_cmomutuys0kbznqo744bx6jku",
+   "name": "Redcore",
+   "stage": "Validation",
+   "nc": 17,
+   "cov": 5,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 24,
+   "oppId": "opp_cmnwx8ta80szno4o32ka0arv2",
+   "name": "Shriram Finance",
+   "stage": "Validation",
+   "nc": null,
+   "cov": 0,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 25,
+   "oppId": "opp_cmojp09ai0er2nqof9fngcbqe",
+   "name": "Mashreq Bank",
+   "stage": "Discovery",
+   "nc": null,
+   "cov": 2,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 26,
+   "oppId": "opp_cmpcp88h201f2o4lfheo352qn",
+   "name": "Telkom Indonesia · White Label",
+   "stage": "Discovery",
+   "nc": null,
+   "cov": 2,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 27,
+   "oppId": "opp_cml13guia0slf5en1uyrng3dw",
+   "name": "TravelClub · Edge",
+   "stage": "Discovery",
+   "nc": null,
+   "cov": 7,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 28,
+   "oppId": "opp_cmo040q120mh8o2mrbzxoak4b",
+   "name": "Absa Customer Engagement and Data Monetisation",
+   "stage": "Discovery",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 29,
+   "oppId": "opp_cml13i40h0ubz5en157utatq7",
+   "name": "Airtel India - Edge",
+   "stage": "Discovery",
+   "nc": 1,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 30,
+   "oppId": "opp_cmrnksm7z0iiyo3oa6seg28yh",
+   "name": "Algar Telecom Intent One",
+   "stage": "Discovery",
+   "nc": 1,
+   "cov": 3,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 31,
+   "oppId": "opp_cml14ct821zx05en10awo8am2",
+   "name": "Arcos Dorados - McDonnalds LATAM Edge",
+   "stage": "Discovery",
+   "nc": 5,
+   "cov": 4,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 32,
+   "oppId": "opp_cml3qln2n002l6io77q4obpnt",
+   "name": "CPAxtra",
+   "stage": "Discovery",
+   "nc": 1,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 33,
+   "oppId": "opp_cmowl451k0298o3ps21tzgk3j",
+   "name": "Du Customer Prediction",
+   "stage": "Discovery",
+   "nc": 10,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 34,
+   "oppId": "opp_cmr4tjv1o0gtvo5mt8quc1xes",
+   "name": "Emirates",
+   "stage": "Discovery",
+   "nc": 1,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 35,
+   "oppId": "opp_cml13ilrv0v1q5en1h3sqqxvt",
+   "name": "Emirates NBD",
+   "stage": "Discovery",
+   "nc": 1,
+   "cov": 0,
+   "why": "bulk pipeline notes only",
+   "dry": 0
+  },
+  {
+   "idx": 36,
+   "oppId": "opp_cmq0jag4c0729o3od5fkjfn2g",
+   "name": "Fawry – Next Best Action & Financial Services Activation",
+   "stage": "Discovery",
+   "nc": 3,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 37,
+   "oppId": "opp_cml14feo422xp5en109mjq3dx",
+   "name": "FCB Deal Intent Edge",
+   "stage": "Discovery",
+   "nc": 7,
+   "cov": 3,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 38,
+   "oppId": "opp_cmq7rrpwg03fzo4pkfm35cmn6",
+   "name": "Groww",
+   "stage": "Discovery",
+   "nc": 2,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 39,
+   "oppId": "opp_cml1495l31x2m5en1t18nl1iv",
+   "name": "Hotel Chocolat - Edge",
+   "stage": "Discovery",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 40,
+   "oppId": "opp_cml149t6v1y2n5en1z629vktu",
+   "name": "HSBC Intent One Trial",
+   "stage": "Discovery",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 41,
+   "oppId": "opp_cmp2nfd4418s7o2pectdw8vj2",
+   "name": "Lloyds Bank - Edge",
+   "stage": "Discovery",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 42,
+   "oppId": "opp_cml577bcz00226go2ii95d48k",
+   "name": "MAF pilot",
+   "stage": "Discovery",
+   "nc": 7,
+   "cov": 3,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 43,
+   "oppId": "opp_cmny95paj01ypo3mvf8kw3l9m",
+   "name": "MTN Ghana CVM and Data monetisation",
+   "stage": "Discovery",
+   "nc": 2,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 44,
+   "oppId": "opp_cml1490xr1wv15en1bpa12bvg",
+   "name": "NaranjaX edge",
+   "stage": "Discovery",
+   "nc": 5,
+   "cov": 4,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 45,
+   "oppId": "opp_cml13ijd40uxn5en12x278nys",
+   "name": "Safaricom - Mpesa Kenya",
+   "stage": "Discovery",
+   "nc": 2,
+   "cov": 0,
+   "why": "bulk pipeline notes only",
+   "dry": 0
+  },
+  {
+   "idx": 46,
+   "oppId": "opp_cml13xfl41fzl5en1f1tu87px",
+   "name": "Singtel",
+   "stage": "Discovery",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 47,
+   "oppId": "opp_cmle6fgyl00ah6hoacgh73o2z",
+   "name": "Telkomsel",
+   "stage": "Discovery",
+   "nc": 0,
+   "cov": 1,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 48,
+   "oppId": "opp_cmoyfppjj0fd3o1o4dh4w5af9",
+   "name": "UNObank",
+   "stage": "Discovery",
+   "nc": 1,
+   "cov": 0,
+   "why": "bulk pipeline notes only",
+   "dry": 0
+  },
+  {
+   "idx": 49,
+   "oppId": "opp_cml14b3ms1yqb5en13dww17oy",
+   "name": "Woolworths Foods CVM",
+   "stage": "Discovery",
+   "nc": 2,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 50,
+   "oppId": "opp_cml1401ru1jwe5en1rr0i9ihl",
+   "name": "Charter · Spectrum Lift",
+   "stage": "Qualification",
+   "nc": null,
+   "cov": 3,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 51,
+   "oppId": "opp_cmldr7vaq0f4n6ho96sdg1ka0",
+   "name": "Banco Inter Edge POV",
+   "stage": "Qualification",
+   "nc": 4,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 52,
+   "oppId": "opp_cml143dds1opn5en12bdcricq",
+   "name": "Bank Jago - Opportunity",
+   "stage": "Qualification",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 53,
+   "oppId": "opp_cmrkszylb0c55o6o816y9d82z",
+   "name": "Beem credit card",
+   "stage": "Qualification",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 54,
+   "oppId": "opp_cml1422eo1mud5en1b84btijf",
+   "name": "Cable One (Sparklight) Lift",
+   "stage": "Qualification",
+   "nc": 1,
+   "cov": 2,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 55,
+   "oppId": "opp_cmp59wtte06fxo6mndzjb88mu",
+   "name": "CellC RFP",
+   "stage": "Qualification",
+   "nc": 2,
+   "cov": 1,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 56,
+   "oppId": "opp_cmpzcwqtc046jo4mqhi24ebsb",
+   "name": "e& Egypt",
+   "stage": "Qualification",
+   "nc": 5,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 57,
+   "oppId": "opp_cms6em21q0003nzoi5f1e7jwd",
+   "name": "Fairway Foods – Demo (Loyalty Offer-Selection)",
+   "stage": "Qualification",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 58,
+   "oppId": "opp_cmoh4fssc0vqenpo9195y8szg",
+   "name": "Flipkart",
+   "stage": "Qualification",
+   "nc": 1,
+   "cov": 0,
+   "why": "bulk pipeline notes only",
+   "dry": 0
+  },
+  {
+   "idx": 59,
+   "oppId": "opp_cml54opz1000r6ipkce3zinho",
+   "name": "Future - accelerated",
+   "stage": "Qualification",
+   "nc": 3,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 60,
+   "oppId": "opp_cmq5jkt1s01dzo5n41d8fcy8b",
+   "name": "IndoSat",
+   "stage": "Qualification",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 61,
+   "oppId": "opp_cms4rd6jn0s4no4o71ygq9ehl",
+   "name": "IntentOne",
+   "stage": "Qualification",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 62,
+   "oppId": "opp_cmr21fblg01n4o2mzg6oy12vn",
+   "name": "IntentOne Edge",
+   "stage": "Qualification",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 63,
+   "oppId": "opp_cml14aw7f1yl75en1ponn33ef",
+   "name": "Mindszi Demo Licence",
+   "stage": "Qualification",
+   "nc": 1,
+   "cov": 0,
+   "why": "notes are about commercials only",
+   "dry": 0
+  },
+  {
+   "idx": 64,
+   "oppId": "opp_cmnyn9sgp0or1o3mvcywyfonn",
+   "name": "MTN Rwanda CVM and Data Monetisation",
+   "stage": "Qualification",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 65,
+   "oppId": "opp_cmmcb608006q5lho3csfp9izh",
+   "name": "Pagbank Edge",
+   "stage": "Qualification",
+   "nc": 7,
+   "cov": 2,
+   "why": null,
+   "dry": 0
+  },
+  {
+   "idx": 66,
+   "oppId": "opp_cmomun9la0k36nsmj71gtdybq",
+   "name": "Ucell",
+   "stage": "Qualification",
+   "nc": 9,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 67,
+   "oppId": "opp_cmrw0ao7t001zo1piej3518dq",
+   "name": "Unknown Telco — Demo Requested (Churn Defence / App Engagement)",
+   "stage": "Qualification",
+   "nc": 0,
+   "cov": 0,
+   "why": "no notes",
+   "dry": 0
+  },
+  {
+   "idx": 68,
+   "oppId": "opp_cmomums7a0jyvnoolhgf4hfni",
+   "name": "Uztelecom",
+   "stage": "Qualification",
+   "nc": 9,
+   "cov": 0,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  },
+  {
+   "idx": 69,
+   "oppId": "opp_cml3qhfgr002r6hn13fx6fx8n",
+   "name": "Verizon Upsell (Edge/Value brands/IntentOne)",
+   "stage": "Qualification",
+   "nc": 11,
+   "cov": 1,
+   "why": "notes exist but contain no delivery detail",
+   "dry": 0
+  }
+ ]
+}
